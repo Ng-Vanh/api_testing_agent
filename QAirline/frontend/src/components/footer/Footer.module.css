@@ -1,0 +1,171 @@
+.footer {
+    background-color: #dfeef6;
+    color: #4b5563;
+    padding: 2rem 1rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    margin-top: 6rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.column {
+    flex: 1 1 calc(33.333% - 2rem);
+    max-width: 380px;
+}
+
+.column:last-child h3 {
+    margin-left: 8px;
+}
+
+.heading {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.listItem {
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.link {
+    text-decoration: none;
+    color: #1f2937;
+    transition: color 0.2s ease;
+}
+
+.link:hover {
+    color: #3b82f6;
+}
+
+.socialIcons {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-right: 7rem;
+}
+
+.icon {
+    font-size: 2rem;
+    color: #1f2937;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.icon:hover {
+    color: #3b82f6;
+    transform: scale(1.2);
+}
+
+.textCenter {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .column {
+        min-width: 100%;
+        text-align: center;
+    }
+
+    .column>h3 {
+        text-align: center;
+    }
+
+    .socialIcons {
+        margin-right: 0;
+        justify-content: center;
+    }
+
+    .emailSection {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .inputGroup {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        max-width: 50vw;
+    }
+
+    .emailInput {
+        width: 100%;
+    }
+
+    .submitButton {
+        width: 100%;
+    }
+}
+
+.emailSection {
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+.helpForm {
+    margin-top: 1rem;
+}
+
+.inputGroup {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+
+
+.emailInput {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+    min-width: 200px;
+}
+
+.emailInput:focus {
+    border-color: var(--primary);
+}
+
+.submitButton {
+    padding: 0.5rem 0.8rem;
+    background-color: var(--primary-dark);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.submitButton:hover {
+    background-color: var(--primary);
+    transform: scale(1.02);
+}
