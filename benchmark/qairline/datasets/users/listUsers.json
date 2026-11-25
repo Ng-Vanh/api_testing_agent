@@ -1,0 +1,68 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "listUsers",
+    "method": "GET",
+    "path": "/api/users",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users/get",
+    "route": "QAirline/backend/routes/UserRoute.js",
+    "controller": "QAirline/backend/controllers/UserController.js"
+  },
+  "obligations": [
+    {
+      "id": "listUsers.valid",
+      "operation_id": "listUsers",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Danh sách người dùng",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {}
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users/get/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1users/get/responses/200",
+          "QAirline/backend/controllers/UserController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

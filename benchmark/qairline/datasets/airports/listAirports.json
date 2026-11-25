@@ -1,0 +1,68 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "listAirports",
+    "method": "GET",
+    "path": "/api/airports",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1airports/get",
+    "route": "QAirline/backend/routes/AirportRoute.js",
+    "controller": "QAirline/backend/controllers/AirportController.js"
+  },
+  "obligations": [
+    {
+      "id": "listAirports.valid",
+      "operation_id": "listAirports",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Danh sách sân bay",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {}
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1airports/get/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1airports/get/responses/200",
+          "QAirline/backend/controllers/AirportController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

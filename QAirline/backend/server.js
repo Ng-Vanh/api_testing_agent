@@ -1,6 +1,6 @@
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
-const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerDocs = require('../specs/qairline_openapi.json');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { connectDB } = require('./config/db');
@@ -11,18 +11,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Swagger Setup
-const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Airport API',
-      version: '1.0.0',
-      description: 'API Documentation for Airport management system',
-    },
-  },
-  apis: ['./routes/**/*.js'],
-};
-const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.get('/api-docs.json', (req, res) => res.json(swaggerDocs));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Routes

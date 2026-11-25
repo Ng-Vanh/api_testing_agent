@@ -1,0 +1,78 @@
+{
+  "version": "0.1",
+  "scenario_id": "booking.create_cancel_restores_state",
+  "scope": "core",
+  "intent": "Tạo Passenger, đặt vé, đọc Booking, hủy vé và kiểm tra ghế được hoàn",
+  "fixture": "seeded",
+  "readiness": "ready",
+  "steps": [
+    {
+      "id": "flight_before",
+      "operation_id": "getFlight",
+      "request": { "path": { "id": "${fixture:flights:QA201-2:_id}" } },
+      "expected": { "status": [200] },
+      "capture": { "economy_seats_before": "$.flightClass.economy.seatsAvailable", "economy_price": "$.flightClass.economy.price" }
+    },
+    {
+      "id": "create_passenger",
+      "operation_id": "createPassenger",
+      "request": { "body": { "name": "QA Scenario Passenger", "email": "qa-scenario-passenger@example.test" } },
+      "expected": { "status": [201] },
+      "capture": { "passenger_id": "$.passenger._id" }
+    },
+    {
+      "id": "create_booking",
+      "operation_id": "createBooking",
+      "request": { "body": { "userID": "${fixture:users:qa_seed_user_01:_id}", "flightID": "${fixture:flights:QA201-2:_id}", "flightClass": "economy", "passengerCount": 1, "passengerIDs": ["${memory:passenger_id}"] } },
+      "expected": { "status": [201] },
+      "capture": { "booking_id": "$.booking._id", "total_price": "$.booking.totalPrice" }
+    },
+    {
+      "id": "read_booking",
+      "operation_id": "getBooking",
+      "request": { "path": { "id": "${memory:booking_id}" } },
+      "expected": { "status": [200] }
+    },
+    {
+      "id": "flight_after_create",
+      "operation_id": "getFlight",
+      "request": { "path": { "id": "${fixture:flights:QA201-2:_id}" } },
+      "expected": { "status": [200] },
+      "capture": { "economy_seats_after_create": "$.flightClass.economy.seatsAvailable" }
+    },
+    {
+      "id": "cancel_booking",
+      "operation_id": "deleteBooking",
+      "request": { "path": { "id": "${memory:booking_id}" } },
+      "expected": { "status": [200] }
+    },
+    {
+      "id": "flight_after_cancel",
+      "operation_id": "getFlight",
+      "request": { "path": { "id": "${fixture:flights:QA201-2:_id}" } },
+      "expected": { "status": [200] },
+      "capture": { "economy_seats_after_cancel": "$.flightClass.economy.seatsAvailable" }
+    },
+    {
+      "id": "booking_after_cancel",
+      "operation_id": "getBooking",
+      "request": { "path": { "id": "${memory:booking_id}" } },
+      "expected": { "status": [404] }
+    }
+  ],
+  "assertions": [
+    { "kind": "equals", "left": "${memory:total_price}", "right": "${memory:economy_price}" },
+    { "kind": "delta", "before": "${memory:economy_seats_before}", "after": "${memory:economy_seats_after_create}", "expected": -1 },
+    { "kind": "equals", "left": "${memory:economy_seats_after_cancel}", "right": "${memory:economy_seats_before}" },
+    { "kind": "status", "step": "booking_after_cancel", "expected": 404 }
+  ],
+  "oracle": {
+    "basis": "business_rule",
+    "evidence": [
+      "QAirline/backend/controllers/BookingController.js:40-61",
+      "QAirline/backend/controllers/BookingController.js:294-321",
+      "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings/post"
+    ],
+    "review": "draft"
+  }
+}

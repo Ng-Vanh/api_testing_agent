@@ -1,0 +1,198 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "createUser",
+    "method": "POST",
+    "path": "/api/users",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users/post",
+    "route": "QAirline/backend/routes/UserRoute.js",
+    "controller": "QAirline/backend/controllers/UserController.js"
+  },
+  "obligations": [
+    {
+      "id": "createUser.valid",
+      "operation_id": "createUser",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Tạo người dùng",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "name": "Benchmark User",
+            "username": "qa_bench_user_01",
+            "password": "${secret:benchmark_password}",
+            "role": "user"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          201
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users/post/responses/201"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1users/post/responses/201",
+          "QAirline/backend/controllers/UserController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "createUser.missing_username",
+      "operation_id": "createUser",
+      "category": "invalid",
+      "subcategory": "missing_required",
+      "intent": "Thiếu trường bắt buộc username",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "field_absent",
+            "location": "body",
+            "field": "username"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "name": "Benchmark User",
+            "password": "${secret:benchmark_password}",
+            "role": "user"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users/post/responses/400"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1users/post",
+          "QAirline/backend/controllers/UserController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "createUser.duplicate_username",
+      "operation_id": "createUser",
+      "category": "invalid",
+      "subcategory": "duplicate_unique",
+      "intent": "Username đã tồn tại",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "existing_value",
+            "location": "body",
+            "field": "username"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "name": "Benchmark User",
+            "username": "qa_seed_user_01",
+            "password": "${secret:benchmark_password}",
+            "role": "user"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users/post/responses/400"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1users/post",
+          "QAirline/backend/controllers/UserController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

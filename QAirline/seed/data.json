@@ -1,0 +1,55 @@
+{
+  "description": "Verified airport identities; all aircraft registrations, schedules, prices, people and bookings are synthetic test data.",
+  "airportSource": "https://airportmap.vietnamairlines.com/",
+  "airports": [
+    { "code": "SGN", "name": "Tan Son Nhat International Airport", "city": "Ho Chi Minh City" },
+    { "code": "HAN", "name": "Noi Bai International Airport", "city": "Ha Noi" },
+    { "code": "DAD", "name": "Da Nang International Airport", "city": "Da Nang" },
+    { "code": "CXR", "name": "Cam Ranh International Airport", "city": "Nha Trang" },
+    { "code": "PQC", "name": "Phu Quoc International Airport", "city": "Phu Quoc" },
+    { "code": "HPH", "name": "Cat Bi International Airport", "city": "Hai Phong" },
+    { "code": "HUI", "name": "Phu Bai International Airport", "city": "Hue" },
+    { "code": "VCA", "name": "Can Tho International Airport", "city": "Can Tho" }
+  ],
+  "aircraft": [
+    { "code": "QA-SEED-01", "manufacturer": "Airbus", "model": "A320", "seats": 180, "type": "Narrow Body", "range": 6100, "cruiseSpeed": 830, "engineType": "Turbofan", "inService": true, "lastMaintenance": "2026-10-01", "nextMaintenance": "2027-04-01" },
+    { "code": "QA-SEED-02", "manufacturer": "Airbus", "model": "A321", "seats": 220, "type": "Narrow Body", "range": 5900, "cruiseSpeed": 830, "engineType": "Turbofan", "inService": true, "lastMaintenance": "2026-09-15", "nextMaintenance": "2027-03-15" },
+    { "code": "QA-SEED-03", "manufacturer": "Boeing", "model": "737-800", "seats": 180, "type": "Narrow Body", "range": 5190, "cruiseSpeed": 820, "engineType": "Turbofan", "inService": true, "lastMaintenance": "2026-11-01", "nextMaintenance": "2027-05-01" },
+    { "code": "QA-SEED-04", "manufacturer": "Airbus", "model": "A320neo", "seats": 180, "type": "Narrow Body", "range": 6300, "cruiseSpeed": 830, "engineType": "Turbofan", "inService": true, "lastMaintenance": "2026-10-20", "nextMaintenance": "2027-04-20" }
+  ],
+  "users": [
+    { "username": "qa_seed_admin", "name": "QA Demo Admin", "role": "admin" },
+    { "username": "qa_seed_user_01", "name": "QA Demo User 01", "role": "user" },
+    { "username": "qa_seed_user_02", "name": "QA Demo User 02", "role": "user" },
+    { "username": "qa_seed_user_03", "name": "QA Demo User 03", "role": "user" }
+  ],
+  "passengers": [
+    { "name": "QA Passenger 01", "email": "qa-passenger-01@example.test" },
+    { "name": "QA Passenger 02", "email": "qa-passenger-02@example.test" },
+    { "name": "QA Passenger 03", "email": "qa-passenger-03@example.test" },
+    { "name": "QA Passenger 04", "email": "qa-passenger-04@example.test" },
+    { "name": "QA Passenger 05", "email": "qa-passenger-05@example.test" },
+    { "name": "QA Passenger 06", "email": "qa-passenger-06@example.test" },
+    { "name": "QA Passenger 07", "email": "qa-passenger-07@example.test" },
+    { "name": "QA Passenger 08", "email": "qa-passenger-08@example.test" }
+  ],
+  "flightPatterns": [
+    { "code": "QA101", "from": "SGN", "to": "HAN", "aircraftCode": "QA-SEED-02", "departureHourUTC": 1, "durationMinutes": 130, "economyPrice": 1650000, "businessPrice": 3450000 },
+    { "code": "QA102", "from": "HAN", "to": "SGN", "aircraftCode": "QA-SEED-02", "departureHourUTC": 8, "durationMinutes": 135, "economyPrice": 1580000, "businessPrice": 3350000 },
+    { "code": "QA201", "from": "SGN", "to": "DAD", "aircraftCode": "QA-SEED-01", "departureHourUTC": 2, "durationMinutes": 90, "economyPrice": 980000, "businessPrice": 2250000 },
+    { "code": "QA202", "from": "DAD", "to": "HAN", "aircraftCode": "QA-SEED-03", "departureHourUTC": 7, "durationMinutes": 85, "economyPrice": 1050000, "businessPrice": 2350000 },
+    { "code": "QA301", "from": "SGN", "to": "PQC", "aircraftCode": "QA-SEED-04", "departureHourUTC": 3, "durationMinutes": 65, "economyPrice": 890000, "businessPrice": 1950000 },
+    { "code": "QA302", "from": "HAN", "to": "CXR", "aircraftCode": "QA-SEED-03", "departureHourUTC": 4, "durationMinutes": 115, "economyPrice": 1320000, "businessPrice": 2850000 },
+    { "code": "QA401", "from": "SGN", "to": "HUI", "aircraftCode": "QA-SEED-01", "departureHourUTC": 5, "durationMinutes": 90, "economyPrice": 920000, "businessPrice": 2050000 },
+    { "code": "QA402", "from": "VCA", "to": "HPH", "aircraftCode": "QA-SEED-04", "departureHourUTC": 6, "durationMinutes": 125, "economyPrice": 1150000, "businessPrice": 2550000 }
+  ],
+  "flightDaysAhead": [2, 4, 7],
+  "bookings": [
+    { "user": "qa_seed_user_01", "flight": "QA101-2", "class": "economy", "passengers": ["qa-passenger-01@example.test", "qa-passenger-02@example.test"] },
+    { "user": "qa_seed_user_02", "flight": "QA101-2", "class": "business", "passengers": ["qa-passenger-03@example.test"] },
+    { "user": "qa_seed_user_03", "flight": "QA201-2", "class": "economy", "passengers": ["qa-passenger-04@example.test"] },
+    { "user": "qa_seed_user_01", "flight": "QA301-4", "class": "economy", "passengers": ["qa-passenger-01@example.test"] },
+    { "user": "qa_seed_user_02", "flight": "QA302-4", "class": "business", "passengers": ["qa-passenger-05@example.test", "qa-passenger-06@example.test"] },
+    { "user": "qa_seed_user_03", "flight": "QA401-7", "class": "economy", "passengers": ["qa-passenger-07@example.test", "qa-passenger-08@example.test"] }
+  ]
+}

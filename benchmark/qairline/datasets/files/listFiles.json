@@ -1,0 +1,68 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "listFiles",
+    "method": "GET",
+    "path": "/api/files",
+    "scope": "extension"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1files/get",
+    "route": "QAirline/backend/routes/FileRoute.js",
+    "controller": "QAirline/backend/routes/FileRoute.js"
+  },
+  "obligations": [
+    {
+      "id": "listFiles.valid",
+      "operation_id": "listFiles",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Danh sách file GridFS",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {}
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1files/get/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1files/get/responses/200",
+          "QAirline/backend/routes/FileRoute.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

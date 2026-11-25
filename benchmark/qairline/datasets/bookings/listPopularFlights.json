@@ -1,0 +1,68 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "listPopularFlights",
+    "method": "GET",
+    "path": "/api/bookings/rank/popular-flights",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings~1rank~1popular-flights/get",
+    "route": "QAirline/backend/routes/BookingRoute.js",
+    "controller": "QAirline/backend/controllers/BookingController.js"
+  },
+  "obligations": [
+    {
+      "id": "listPopularFlights.valid",
+      "operation_id": "listPopularFlights",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Các tuyến bay có nhiều booking",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {}
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings~1rank~1popular-flights/get/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings~1rank~1popular-flights/get/responses/200",
+          "QAirline/backend/controllers/BookingController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

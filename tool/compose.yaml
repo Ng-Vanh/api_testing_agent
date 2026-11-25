@@ -1,0 +1,13 @@
+services:
+  api:
+    build: ./backend
+    ports:
+      - '127.0.0.1:8111:8111'
+    volumes:
+      - ./data:/data
+  worker-check:
+    build: ./backend
+    profiles: [storage-check]
+    command: [python, -m, app.worker, --check]
+    volumes:
+      - ./data:/data

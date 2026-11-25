@@ -1,0 +1,128 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "getAircraftsByType",
+    "method": "GET",
+    "path": "/api/aircrafts/type/{type}",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1aircrafts~1type~1{type}/get",
+    "route": "QAirline/backend/routes/AircraftRoute.js",
+    "controller": "QAirline/backend/controllers/AircraftController.js"
+  },
+  "obligations": [
+    {
+      "id": "getAircraftsByType.valid",
+      "operation_id": "getAircraftsByType",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Lọc máy bay theo loại",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "type": "Narrow Body"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1aircrafts~1type~1{type}/get/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1aircrafts~1type~1{type}/get/responses/200",
+          "QAirline/backend/controllers/AircraftController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "getAircraftsByType.unknown_type",
+      "operation_id": "getAircraftsByType",
+      "category": "invalid",
+      "subcategory": "no_matching_resource",
+      "intent": "Không có máy bay thuộc loại được hỏi",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "no_matching_resource",
+            "location": "path",
+            "field": "type"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "type": "Unknown Type"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          404
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1aircrafts~1type~1{type}/get/responses/404"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1aircrafts~1type~1{type}/get",
+          "QAirline/backend/controllers/AircraftController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

@@ -1,0 +1,216 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "QAirline API",
+    "version": "1.0.0",
+    "description": "Tài liệu từ các route, controller và Mongoose model hiện có. Một số lỗi xử lý và bảo mật của implementation chưa được chuẩn hóa thành hợp đồng mong muốn."
+  },
+  "servers": [{ "url": "/", "description": "Cùng origin với trang Swagger UI" }],
+  "tags": [
+    { "name": "Users" }, { "name": "Airports" }, { "name": "Aircrafts" },
+    { "name": "Flights" }, { "name": "Passengers" }, { "name": "Bookings" },
+    { "name": "Content" }, { "name": "Files" }, { "name": "Statistics" }, { "name": "Scheduler" }
+  ],
+  "paths": {
+    "/api/users": {
+      "get": { "tags": ["Users"], "operationId": "listUsers", "summary": "Danh sách người dùng", "responses": { "200": { "$ref": "#/components/responses/UserList" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "post": { "tags": ["Users"], "operationId": "createUser", "summary": "Tạo người dùng", "requestBody": { "$ref": "#/components/requestBodies/UserCreate" }, "x-id-path": "$.user._id", "responses": { "201": { "$ref": "#/components/responses/UserCreated" }, "400": { "$ref": "#/components/responses/BadRequest" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/users/login": {
+      "post": { "tags": ["Users"], "operationId": "loginUser", "summary": "Đăng nhập", "requestBody": { "$ref": "#/components/requestBodies/Login" }, "responses": { "200": { "$ref": "#/components/responses/LoginSuccess" }, "400": { "$ref": "#/components/responses/BadRequest" }, "401": { "$ref": "#/components/responses/Unauthorized" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/users/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/Id" }],
+      "get": { "tags": ["Users"], "operationId": "getUser", "summary": "Lấy người dùng theo ID", "responses": { "200": { "$ref": "#/components/responses/User" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "put": { "tags": ["Users"], "operationId": "updateUser", "summary": "Cập nhật người dùng", "requestBody": { "$ref": "#/components/requestBodies/UserUpdate" }, "responses": { "200": { "$ref": "#/components/responses/UserUpdated" }, "400": { "$ref": "#/components/responses/BadRequest" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "delete": { "tags": ["Users"], "operationId": "deleteUser", "summary": "Xóa người dùng", "responses": { "200": { "$ref": "#/components/responses/SuccessMessage" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/airports": {
+      "get": { "tags": ["Airports"], "operationId": "listAirports", "summary": "Danh sách sân bay", "responses": { "200": { "$ref": "#/components/responses/AirportList" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "post": { "tags": ["Airports"], "operationId": "createAirport", "summary": "Tạo sân bay", "requestBody": { "$ref": "#/components/requestBodies/AirportCreate" }, "x-id-path": "$.airport._id", "responses": { "201": { "$ref": "#/components/responses/AirportCreated" }, "400": { "$ref": "#/components/responses/BadRequest" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/airports/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/Id" }],
+      "get": { "tags": ["Airports"], "operationId": "getAirport", "summary": "Lấy sân bay theo ID", "responses": { "200": { "$ref": "#/components/responses/AirportWrapped" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "put": { "tags": ["Airports"], "operationId": "updateAirport", "summary": "Cập nhật sân bay", "requestBody": { "$ref": "#/components/requestBodies/AirportUpdate" }, "responses": { "200": { "$ref": "#/components/responses/SuccessMessage" }, "400": { "$ref": "#/components/responses/BadRequest" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "delete": { "tags": ["Airports"], "operationId": "deleteAirport", "summary": "Xóa sân bay", "responses": { "200": { "$ref": "#/components/responses/SuccessMessage" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/aircrafts": {
+      "get": { "tags": ["Aircrafts"], "operationId": "listAircrafts", "summary": "Danh sách máy bay", "responses": { "200": { "$ref": "#/components/responses/AircraftList" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "post": { "tags": ["Aircrafts"], "operationId": "createAircraft", "summary": "Tạo máy bay", "requestBody": { "$ref": "#/components/requestBodies/AircraftCreate" }, "x-id-path": "$.aircraft._id", "responses": { "201": { "$ref": "#/components/responses/AircraftCreated" }, "400": { "$ref": "#/components/responses/BadRequest" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/aircrafts/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/Id" }],
+      "get": { "tags": ["Aircrafts"], "operationId": "getAircraft", "summary": "Lấy máy bay theo ID", "responses": { "200": { "$ref": "#/components/responses/Aircraft" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "put": { "tags": ["Aircrafts"], "operationId": "updateAircraft", "summary": "Cập nhật máy bay", "requestBody": { "$ref": "#/components/requestBodies/AircraftUpdate" }, "responses": { "200": { "$ref": "#/components/responses/AircraftUpdated" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "delete": { "tags": ["Aircrafts"], "operationId": "deleteAircraft", "summary": "Xóa máy bay", "responses": { "200": { "$ref": "#/components/responses/SuccessMessage" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/aircrafts/type/{type}": {
+      "parameters": [{ "name": "type", "in": "path", "required": true, "schema": { "type": "string", "enum": ["Narrow Body", "Wide Body", "Regional Jet"] } }],
+      "get": { "tags": ["Aircrafts"], "operationId": "getAircraftsByType", "summary": "Lọc máy bay theo loại", "responses": { "200": { "$ref": "#/components/responses/AircraftList" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/flights": {
+      "get": { "tags": ["Flights"], "operationId": "listFlights", "summary": "Danh sách chuyến bay", "responses": { "200": { "$ref": "#/components/responses/FlightList" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "post": { "tags": ["Flights"], "operationId": "createFlight", "summary": "Tạo chuyến bay", "description": "Cần hai Airport và một Aircraft đã tồn tại; arrivalTime phải sau departureTime.", "requestBody": { "$ref": "#/components/requestBodies/FlightCreate" }, "x-id-path": "$.flight._id", "responses": { "201": { "$ref": "#/components/responses/FlightCreated" }, "400": { "$ref": "#/components/responses/BadRequest" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/flights/search": {
+      "post": { "tags": ["Flights"], "operationId": "searchFlights", "summary": "Tìm chuyến bay theo thành phố/ngày/số khách", "requestBody": { "$ref": "#/components/requestBodies/FlightSearch" }, "responses": { "200": { "$ref": "#/components/responses/FlightSearchResults" }, "400": { "$ref": "#/components/responses/BadRequest" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/flights/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/Id" }],
+      "get": { "tags": ["Flights"], "operationId": "getFlight", "summary": "Lấy chuyến bay theo ID", "responses": { "200": { "$ref": "#/components/responses/Flight" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "put": { "tags": ["Flights"], "operationId": "updateFlight", "summary": "Cập nhật chuyến bay", "requestBody": { "$ref": "#/components/requestBodies/FlightUpdate" }, "responses": { "200": { "$ref": "#/components/responses/FlightUpdated" }, "400": { "$ref": "#/components/responses/BadRequest" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "delete": { "tags": ["Flights"], "operationId": "deleteFlight", "summary": "Xóa chuyến bay", "responses": { "200": { "$ref": "#/components/responses/SuccessMessage" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/flights/code/{code}": {
+      "parameters": [{ "name": "code", "in": "path", "required": true, "schema": { "type": "string" } }],
+      "get": { "tags": ["Flights"], "operationId": "getFlightByCode", "summary": "Tra chuyến bay theo mã", "responses": { "200": { "$ref": "#/components/responses/Flight" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/passengers": {
+      "get": { "tags": ["Passengers"], "operationId": "listPassengers", "summary": "Danh sách hành khách", "responses": { "200": { "$ref": "#/components/responses/PassengerList" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "post": { "tags": ["Passengers"], "operationId": "createPassenger", "summary": "Tạo hành khách", "requestBody": { "$ref": "#/components/requestBodies/PassengerCreate" }, "x-id-path": "$.passenger._id", "responses": { "201": { "$ref": "#/components/responses/PassengerCreated" }, "400": { "$ref": "#/components/responses/BadRequest" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/passengers/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/Id" }],
+      "get": { "tags": ["Passengers"], "operationId": "getPassenger", "summary": "Lấy hành khách theo ID", "responses": { "200": { "$ref": "#/components/responses/Passenger" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/bookings": {
+      "get": { "tags": ["Bookings"], "operationId": "listBookings", "summary": "Danh sách booking", "responses": { "200": { "$ref": "#/components/responses/BookingList" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "post": { "tags": ["Bookings"], "operationId": "createBooking", "summary": "Tạo booking", "description": "Cần User, Flight và các Passenger đã tồn tại; passengerIDs.length phải bằng passengerCount. totalPrice được tính từ giá hạng ghế.", "requestBody": { "$ref": "#/components/requestBodies/BookingCreate" }, "x-id-path": "$.booking._id", "responses": { "201": { "$ref": "#/components/responses/BookingCreated" }, "400": { "$ref": "#/components/responses/BadRequest" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/bookings/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/Id" }],
+      "get": { "tags": ["Bookings"], "operationId": "getBooking", "summary": "Lấy booking theo ID", "responses": { "200": { "$ref": "#/components/responses/Booking" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "put": { "tags": ["Bookings"], "operationId": "updateBooking", "summary": "Đổi chuyến bay hoặc hạng ghế", "requestBody": { "$ref": "#/components/requestBodies/BookingUpdate" }, "responses": { "200": { "$ref": "#/components/responses/BookingUpdated" }, "400": { "$ref": "#/components/responses/BadRequest" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "delete": { "tags": ["Bookings"], "operationId": "deleteBooking", "summary": "Hủy booking", "responses": { "200": { "$ref": "#/components/responses/SuccessMessage" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/bookings/user/{userID}": {
+      "parameters": [
+        { "name": "userID", "in": "path", "required": true, "schema": { "$ref": "#/components/schemas/ObjectId" } },
+        { "name": "type", "in": "query", "required": false, "schema": { "type": "string", "enum": ["Upcoming", "Past"] } }
+      ],
+      "get": { "tags": ["Bookings"], "operationId": "listUserBookings", "summary": "Booking của một người dùng", "responses": { "200": { "$ref": "#/components/responses/BookingList" }, "400": { "$ref": "#/components/responses/BadRequest" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/bookings/rank/popular-flights": {
+      "get": { "tags": ["Bookings"], "operationId": "listPopularFlights", "summary": "Các tuyến bay có nhiều booking", "responses": { "200": { "$ref": "#/components/responses/GenericArray" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/content": {
+      "get": { "tags": ["Content"], "operationId": "listContent", "summary": "Danh sách nội dung", "responses": { "200": { "$ref": "#/components/responses/ContentList" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "post": { "tags": ["Content"], "operationId": "createContent", "summary": "Tạo nội dung", "requestBody": { "$ref": "#/components/requestBodies/ContentCreate" }, "responses": { "201": { "$ref": "#/components/responses/SuccessMessage" }, "400": { "$ref": "#/components/responses/BadRequest" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/content/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/Id" }],
+      "get": { "tags": ["Content"], "operationId": "getContent", "summary": "Lấy nội dung theo ID", "responses": { "200": { "$ref": "#/components/responses/Content" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "put": { "tags": ["Content"], "operationId": "updateContent", "summary": "Cập nhật nội dung", "requestBody": { "$ref": "#/components/requestBodies/ContentUpdate" }, "responses": { "200": { "$ref": "#/components/responses/SuccessMessage" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "delete": { "tags": ["Content"], "operationId": "deleteContent", "summary": "Xóa nội dung", "responses": { "200": { "$ref": "#/components/responses/SuccessMessage" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/files": {
+      "get": { "tags": ["Files"], "operationId": "listFiles", "summary": "Danh sách file GridFS", "responses": { "200": { "$ref": "#/components/responses/GenericArray" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/files/upload": {
+      "post": { "tags": ["Files"], "operationId": "uploadFile", "summary": "Upload ảnh vào GridFS", "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "required": ["image"], "properties": { "image": { "type": "string", "format": "binary" } } } } } }, "responses": { "201": { "$ref": "#/components/responses/SuccessMessage" }, "400": { "$ref": "#/components/responses/BadRequest" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/files/{identifier}": {
+      "parameters": [{ "name": "identifier", "in": "path", "required": true, "description": "GET nhận filename; DELETE nhận MongoDB file ID.", "schema": { "type": "string" } }],
+      "get": { "tags": ["Files"], "operationId": "getFile", "summary": "Lấy thông tin file theo tên", "responses": { "200": { "$ref": "#/components/responses/GenericObject" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } },
+      "delete": { "tags": ["Files"], "operationId": "deleteFile", "summary": "Xóa file theo ID", "responses": { "200": { "$ref": "#/components/responses/SuccessMessage" }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/files/image/{filename}": {
+      "parameters": [{ "name": "filename", "in": "path", "required": true, "schema": { "type": "string" } }],
+      "get": { "tags": ["Files"], "operationId": "getImage", "summary": "Tải nội dung ảnh", "responses": { "200": { "description": "Binary image", "content": { "application/octet-stream": { "schema": { "type": "string", "format": "binary" } } } }, "404": { "$ref": "#/components/responses/NotFound" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/api/statistics": {
+      "get": { "tags": ["Statistics"], "operationId": "getStatistics", "summary": "Thống kê booking, doanh thu và người dùng", "responses": { "200": { "$ref": "#/components/responses/Statistics" }, "500": { "$ref": "#/components/responses/ServerError" } } }
+    },
+    "/scheduler/start": {
+      "post": { "tags": ["Scheduler"], "operationId": "startScheduler", "summary": "Bật tác vụ cập nhật trạng thái chuyến bay", "responses": { "200": { "description": "Scheduler started" } } }
+    },
+    "/scheduler/stop": {
+      "post": { "tags": ["Scheduler"], "operationId": "stopScheduler", "summary": "Dừng tác vụ cập nhật trạng thái chuyến bay", "responses": { "200": { "description": "Scheduler stopped" } } }
+    },
+    "/scheduler/status": {
+      "get": { "tags": ["Scheduler"], "operationId": "getSchedulerStatus", "summary": "Trạng thái scheduler", "responses": { "200": { "description": "running hoặc stopped", "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "string", "enum": ["running", "stopped"] } } } } } } } }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Id": { "name": "id", "in": "path", "required": true, "schema": { "$ref": "#/components/schemas/ObjectId" } }
+    },
+    "schemas": {
+      "ObjectId": { "type": "string", "pattern": "^[0-9a-fA-F]{24}$", "example": "a10000000000000000000001" },
+      "Error": { "type": "object", "properties": { "message": { "type": "string" } } },
+      "Airport": { "type": "object", "required": ["_id", "code", "name", "city"], "properties": { "_id": { "$ref": "#/components/schemas/ObjectId" }, "code": { "type": "string", "example": "SGN" }, "name": { "type": "string" }, "city": { "type": "string" } } },
+      "AirportCreate": { "type": "object", "required": ["code", "name", "city"], "properties": { "code": { "type": "string", "example": "SGN" }, "name": { "type": "string", "example": "Tan Son Nhat International Airport" }, "city": { "type": "string", "example": "Ho Chi Minh City" } } },
+      "Aircraft": { "type": "object", "required": ["_id", "code", "manufacturer", "model", "seats", "type", "range", "cruiseSpeed", "engineType", "inService", "lastMaintenance", "nextMaintenance"], "properties": { "_id": { "$ref": "#/components/schemas/ObjectId" }, "code": { "type": "string" }, "manufacturer": { "type": "string" }, "model": { "type": "string" }, "seats": { "type": "integer" }, "type": { "type": "string", "enum": ["Narrow Body", "Wide Body", "Regional Jet"] }, "range": { "type": "number" }, "cruiseSpeed": { "type": "number" }, "engineType": { "type": "string" }, "inService": { "type": "boolean" }, "lastMaintenance": { "type": "string" }, "nextMaintenance": { "type": "string" } } },
+      "AircraftCreate": { "type": "object", "required": ["code", "manufacturer", "model", "seats", "type", "range", "cruiseSpeed", "engineType", "inService", "lastMaintenance", "nextMaintenance"], "properties": { "code": { "type": "string" }, "manufacturer": { "type": "string" }, "model": { "type": "string" }, "seats": { "type": "integer" }, "type": { "type": "string", "enum": ["Narrow Body", "Wide Body", "Regional Jet"] }, "range": { "type": "number" }, "cruiseSpeed": { "type": "number" }, "engineType": { "type": "string" }, "inService": { "type": "boolean" }, "lastMaintenance": { "type": "string" }, "nextMaintenance": { "type": "string" } } },
+      "FlightClass": { "type": "object", "required": ["economy", "business"], "properties": { "economy": { "$ref": "#/components/schemas/Fare" }, "business": { "$ref": "#/components/schemas/Fare" } } },
+      "Fare": { "type": "object", "required": ["price", "seatsAvailable"], "properties": { "price": { "type": "number", "minimum": 0 }, "seatsAvailable": { "type": "integer", "minimum": 0 } } },
+      "FlightCreate": { "type": "object", "required": ["flightCode", "departureAirport", "arrivalAirport", "departureTime", "arrivalTime", "flightClass", "aircraft", "flightStatus"], "properties": { "flightCode": { "type": "string" }, "departureAirport": { "$ref": "#/components/schemas/ObjectId" }, "arrivalAirport": { "$ref": "#/components/schemas/ObjectId" }, "departureTime": { "type": "string", "format": "date-time" }, "arrivalTime": { "type": "string", "format": "date-time" }, "flightClass": { "$ref": "#/components/schemas/FlightClass" }, "aircraft": { "$ref": "#/components/schemas/ObjectId" }, "flightStatus": { "type": "string", "enum": ["Scheduled", "On time", "Delayed", "Landed", "In flight"] } } },
+      "Flight": { "allOf": [{ "$ref": "#/components/schemas/FlightCreate" }, { "type": "object", "required": ["_id", "flightDuration"], "properties": { "_id": { "$ref": "#/components/schemas/ObjectId" }, "flightDuration": { "type": "string" } } }] },
+      "FlightSearch": { "type": "object", "required": ["departureCity", "destinationCity", "departureDate", "passengerCount"], "properties": { "departureCity": { "type": "string", "example": "Ho Chi Minh City" }, "destinationCity": { "type": "string", "example": "Ha Noi" }, "departureDate": { "type": "string", "format": "date" }, "passengerCount": { "type": "integer", "minimum": 1 } } },
+      "User": { "type": "object", "required": ["_id", "name", "username", "role"], "description": "Mô tả các trường cần dùng; implementation hiện có thể trả thêm password hash, cần đánh giá riêng như lỗi bảo mật.", "properties": { "_id": { "$ref": "#/components/schemas/ObjectId" }, "name": { "type": "string" }, "username": { "type": "string" }, "role": { "type": "string", "enum": ["user", "admin"] }, "bookings": { "type": "array", "items": { "$ref": "#/components/schemas/ObjectId" } } } },
+      "UserCreate": { "type": "object", "required": ["name", "username", "password"], "properties": { "name": { "type": "string" }, "username": { "type": "string" }, "password": { "type": "string", "format": "password" }, "role": { "type": "string", "enum": ["user", "admin"], "default": "user" } } },
+      "Login": { "type": "object", "required": ["username", "password"], "properties": { "username": { "type": "string" }, "password": { "type": "string", "format": "password" } } },
+      "Passenger": { "type": "object", "required": ["_id", "name", "email"], "properties": { "_id": { "$ref": "#/components/schemas/ObjectId" }, "name": { "type": "string" }, "email": { "type": "string", "format": "email" } } },
+      "PassengerCreate": { "type": "object", "required": ["name", "email"], "properties": { "name": { "type": "string" }, "email": { "type": "string", "format": "email" } } },
+      "Booking": { "type": "object", "required": ["_id", "userID", "flightID", "flightClass", "passengerCount", "passengers", "bookingDate", "totalPrice"], "properties": { "_id": { "$ref": "#/components/schemas/ObjectId" }, "userID": { "$ref": "#/components/schemas/ObjectId" }, "flightID": { "$ref": "#/components/schemas/ObjectId" }, "flightClass": { "type": "string", "enum": ["economy", "business"] }, "passengerCount": { "type": "integer" }, "passengers": { "type": "array", "items": { "$ref": "#/components/schemas/ObjectId" } }, "bookingDate": { "type": "string", "format": "date-time" }, "totalPrice": { "type": "number" } } },
+      "BookingCreate": { "type": "object", "required": ["userID", "flightID", "flightClass", "passengerCount", "passengerIDs"], "properties": { "userID": { "$ref": "#/components/schemas/ObjectId" }, "flightID": { "$ref": "#/components/schemas/ObjectId" }, "flightClass": { "type": "string", "enum": ["economy", "business"] }, "passengerCount": { "type": "integer", "minimum": 1 }, "passengerIDs": { "type": "array", "minItems": 1, "items": { "$ref": "#/components/schemas/ObjectId" } } } },
+      "Content": { "type": "object", "required": ["_id", "title", "description", "image", "contentType"], "properties": { "_id": { "$ref": "#/components/schemas/ObjectId" }, "title": { "type": "string" }, "description": { "type": "string" }, "image": { "type": "string" }, "isActive": { "type": "boolean" }, "contentType": { "type": "string", "enum": ["Introduction", "Promotions", "Alerts", "News"] } } },
+      "ContentCreate": { "type": "object", "required": ["title", "description", "image", "contentType"], "properties": { "title": { "type": "string" }, "description": { "type": "string" }, "image": { "type": "string" }, "isActive": { "type": "boolean" }, "contentType": { "type": "string", "enum": ["Introduction", "Promotions", "Alerts", "News"] } } },
+      "Statistics": { "type": "object", "required": ["totalBookings", "totalRevenue", "totalUsers"], "properties": { "totalBookings": { "type": "integer" }, "totalRevenue": { "type": "number" }, "totalUsers": { "type": "integer" } } }
+    },
+    "requestBodies": {
+      "UserCreate": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserCreate" } } } },
+      "UserUpdate": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "name": { "type": "string" }, "username": { "type": "string" }, "password": { "type": "string", "format": "password" }, "role": { "type": "string", "enum": ["user", "admin"] } } } } } },
+      "Login": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Login" } } } },
+      "AirportCreate": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AirportCreate" } } } },
+      "AirportUpdate": { "required": true, "content": { "application/json": { "schema": { "type": "object", "minProperties": 1, "properties": { "code": { "type": "string" }, "name": { "type": "string" }, "city": { "type": "string" } } } } } },
+      "AircraftCreate": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AircraftCreate" } } } },
+      "AircraftUpdate": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "code": { "type": "string" }, "manufacturer": { "type": "string" }, "model": { "type": "string" }, "seats": { "type": "integer" }, "type": { "type": "string", "enum": ["Narrow Body", "Wide Body", "Regional Jet"] }, "range": { "type": "number" }, "cruiseSpeed": { "type": "number" }, "engineType": { "type": "string" }, "inService": { "type": "boolean" }, "lastMaintenance": { "type": "string" }, "nextMaintenance": { "type": "string" } } } } } },
+      "FlightCreate": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/FlightCreate" } } } },
+      "FlightUpdate": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "flightCode": { "type": "string" }, "departureAirport": { "$ref": "#/components/schemas/ObjectId" }, "arrivalAirport": { "$ref": "#/components/schemas/ObjectId" }, "departureTime": { "type": "string", "format": "date-time" }, "arrivalTime": { "type": "string", "format": "date-time" }, "flightClass": { "$ref": "#/components/schemas/FlightClass" }, "aircraft": { "$ref": "#/components/schemas/ObjectId" }, "flightStatus": { "type": "string", "enum": ["Scheduled", "On time", "Delayed", "Landed", "In flight"] } } } } } },
+      "FlightSearch": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/FlightSearch" } } } },
+      "PassengerCreate": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PassengerCreate" } } } },
+      "BookingCreate": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/BookingCreate" } } } },
+      "BookingUpdate": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "flightClass": { "type": "string", "enum": ["economy", "business"] }, "flightID": { "$ref": "#/components/schemas/ObjectId" } } } } } },
+      "ContentCreate": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ContentCreate" } } } },
+      "ContentUpdate": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "title": { "type": "string" }, "description": { "type": "string" }, "image": { "type": "string" }, "isActive": { "type": "boolean" }, "contentType": { "type": "string", "enum": ["Introduction", "Promotions", "Alerts", "News"] } } } } } }
+    },
+    "responses": {
+      "BadRequest": { "description": "Dữ liệu đầu vào không hợp lệ", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "Unauthorized": { "description": "Sai username hoặc password", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "NotFound": { "description": "Không tìm thấy tài nguyên", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "ServerError": { "description": "Lỗi server (bao gồm một số trường hợp ID sai định dạng ở implementation hiện tại)", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+      "SuccessMessage": { "description": "Thao tác thành công", "content": { "application/json": { "schema": { "type": "object", "required": ["message"], "properties": { "message": { "type": "string" } } } } } },
+      "GenericObject": { "description": "Object", "content": { "application/json": { "schema": { "type": "object" } } } },
+      "GenericArray": { "description": "Danh sách", "content": { "application/json": { "schema": { "type": "array", "items": { "type": "object" } } } } },
+      "AirportList": { "description": "Danh sách sân bay", "content": { "application/json": { "schema": { "type": "object", "required": ["airports"], "properties": { "airports": { "type": "array", "items": { "$ref": "#/components/schemas/Airport" } } } } } } },
+      "AirportWrapped": { "description": "Sân bay", "content": { "application/json": { "schema": { "type": "object", "required": ["airport"], "properties": { "airport": { "$ref": "#/components/schemas/Airport" } } } } } },
+      "AircraftList": { "description": "Danh sách máy bay", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Aircraft" } } } } },
+      "FlightList": { "description": "Danh sách chuyến bay", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Flight" } } } } },
+      "FlightSearchResults": { "description": "Kết quả tìm chuyến bay (dữ liệu aggregate)", "content": { "application/json": { "schema": { "type": "array", "items": { "type": "object" } } } } },
+      "UserList": { "description": "Danh sách người dùng", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/User" } } } } },
+      "PassengerList": { "description": "Danh sách hành khách", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Passenger" } } } } },
+      "BookingList": { "description": "Danh sách booking", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Booking" } } } } },
+      "ContentList": { "description": "Danh sách nội dung", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Content" } } } } },
+      "AirportCreated": { "description": "Đã tạo sân bay", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "airport"], "properties": { "message": { "type": "string" }, "airport": { "$ref": "#/components/schemas/Airport" } } } } } },
+      "AircraftCreated": { "description": "Đã tạo máy bay", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "aircraft"], "properties": { "message": { "type": "string" }, "aircraft": { "$ref": "#/components/schemas/Aircraft" } } } } } },
+      "FlightCreated": { "description": "Đã tạo chuyến bay", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "flight"], "properties": { "message": { "type": "string" }, "flight": { "$ref": "#/components/schemas/Flight" } } } } } },
+      "UserCreated": { "description": "Đã tạo người dùng", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "user"], "properties": { "message": { "type": "string" }, "user": { "$ref": "#/components/schemas/User" } } } } } },
+      "PassengerCreated": { "description": "Đã tạo hành khách", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "passenger"], "properties": { "message": { "type": "string" }, "passenger": { "$ref": "#/components/schemas/Passenger" } } } } } },
+      "BookingCreated": { "description": "Đã tạo booking", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "booking"], "properties": { "message": { "type": "string" }, "booking": { "$ref": "#/components/schemas/Booking" } } } } } },
+      "AircraftUpdated": { "description": "Đã cập nhật máy bay", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "aircraft"], "properties": { "message": { "type": "string" }, "aircraft": { "$ref": "#/components/schemas/Aircraft" } } } } } },
+      "FlightUpdated": { "description": "Đã cập nhật chuyến bay", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "flight"], "properties": { "message": { "type": "string" }, "flight": { "$ref": "#/components/schemas/Flight" } } } } } },
+      "UserUpdated": { "description": "Đã cập nhật người dùng", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "user"], "properties": { "message": { "type": "string" }, "user": { "$ref": "#/components/schemas/User" } } } } } },
+      "BookingUpdated": { "description": "Đã cập nhật booking", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "booking"], "properties": { "message": { "type": "string" }, "booking": { "$ref": "#/components/schemas/Booking" } } } } } },
+      "User": { "description": "Người dùng", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
+      "Aircraft": { "description": "Máy bay", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Aircraft" } } } },
+      "Flight": { "description": "Chuyến bay", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Flight" } } } },
+      "Passenger": { "description": "Hành khách", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Passenger" } } } },
+      "Booking": { "description": "Booking", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Booking" } } } },
+      "Content": { "description": "Nội dung", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Content" } } } },
+      "Statistics": { "description": "Thống kê", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Statistics" } } } },
+      "LoginSuccess": { "description": "Đăng nhập thành công", "content": { "application/json": { "schema": { "type": "object", "required": ["message", "user"], "properties": { "message": { "type": "string" }, "user": { "type": "object", "properties": { "userId": { "$ref": "#/components/schemas/ObjectId" }, "name": { "type": "string" }, "role": { "type": "string", "enum": ["user", "admin"] } } } } } } } }
+    }
+  }
+}

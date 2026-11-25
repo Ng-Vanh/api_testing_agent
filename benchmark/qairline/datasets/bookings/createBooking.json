@@ -1,0 +1,422 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "createBooking",
+    "method": "POST",
+    "path": "/api/bookings",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings/post",
+    "route": "QAirline/backend/routes/BookingRoute.js",
+    "controller": "QAirline/backend/controllers/BookingController.js"
+  },
+  "obligations": [
+    {
+      "id": "createBooking.valid",
+      "operation_id": "createBooking",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Tạo booking",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "userID": "${fixture:users:qa_seed_user_01:_id}",
+            "flightID": "${fixture:flights:QA201-2:_id}",
+            "flightClass": "economy",
+            "passengerCount": 1,
+            "passengerIDs": [
+              "${fixture:passengers:qa-passenger-01@example.test:_id}"
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          201
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings/post/responses/201"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings/post/responses/201",
+          "QAirline/backend/controllers/BookingController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "createBooking.missing_flightID",
+      "operation_id": "createBooking",
+      "category": "invalid",
+      "subcategory": "missing_required",
+      "intent": "Thiếu trường bắt buộc flightID",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "field_absent",
+            "location": "body",
+            "field": "flightID"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "userID": "${fixture:users:qa_seed_user_01:_id}",
+            "flightClass": "economy",
+            "passengerCount": 1,
+            "passengerIDs": [
+              "${fixture:passengers:qa-passenger-01@example.test:_id}"
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings/post/responses/400"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings/post",
+          "QAirline/backend/controllers/BookingController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "createBooking.mismatched_passenger_count",
+      "operation_id": "createBooking",
+      "category": "invalid",
+      "subcategory": "cross_field_mismatch",
+      "intent": "passengerCount khác độ dài passengerIDs",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "length_mismatch",
+            "count_field": "body.passengerCount",
+            "list_field": "body.passengerIDs"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "state_before",
+          "state_after",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "userID": "${fixture:users:qa_seed_user_01:_id}",
+            "flightID": "${fixture:flights:QA201-2:_id}",
+            "flightClass": "economy",
+            "passengerCount": 2,
+            "passengerIDs": [
+              "${fixture:passengers:qa-passenger-01@example.test:_id}"
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings/post/responses/400"
+          },
+          {
+            "kind": "state_unchanged",
+            "resources": [
+              "bookings",
+              "flight.seatsAvailable"
+            ]
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings/post",
+          "QAirline/backend/controllers/BookingController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "createBooking.invalid_flight_class",
+      "operation_id": "createBooking",
+      "category": "invalid",
+      "subcategory": "invalid_enum",
+      "intent": "Hạng ghế không hợp lệ",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "value_outside_enum",
+            "location": "body",
+            "field": "flightClass"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "userID": "${fixture:users:qa_seed_user_01:_id}",
+            "flightID": "${fixture:flights:QA201-2:_id}",
+            "flightClass": "premium",
+            "passengerCount": 1,
+            "passengerIDs": [
+              "${fixture:passengers:qa-passenger-01@example.test:_id}"
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings/post/responses/400"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings/post",
+          "QAirline/backend/controllers/BookingController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "createBooking.insufficient_seats",
+      "operation_id": "createBooking",
+      "category": "boundary",
+      "subcategory": "capacity_exceeded",
+      "intent": "Số khách lớn hơn số ghế economy còn lại",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "one_seat_flight"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "capacity_exceeded",
+            "count_field": "body.passengerCount",
+            "capacity": "flight.flightClass.economy.seatsAvailable"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "state_before",
+          "state_after",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "one_seat_flight",
+        "request": {
+          "body": {
+            "userID": "${fixture:users:qa_seed_user_01:_id}",
+            "flightID": "${fixture:flights:one_seat_flight:_id}",
+            "flightClass": "economy",
+            "passengerCount": 2,
+            "passengerIDs": [
+              "${fixture:passengers:qa-passenger-01@example.test:_id}",
+              "${fixture:passengers:qa-passenger-02@example.test:_id}"
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "state_unchanged",
+            "resources": [
+              "bookings",
+              "flight.seatsAvailable"
+            ]
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "business_rule",
+        "evidence": [
+          "QAirline/backend/controllers/BookingController.js:26-33"
+        ],
+        "review": "draft"
+      },
+      "readiness": "needs_fixture"
+    },
+    {
+      "id": "createBooking.price_and_seats",
+      "operation_id": "createBooking",
+      "category": "stateful",
+      "subcategory": "derived_value_and_state",
+      "intent": "Sau khi tạo booking, tổng tiền và ghế còn lại đúng",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          },
+          {
+            "kind": "state_snapshot",
+            "resources": [
+              "flight.seatsAvailable"
+            ]
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "state_before",
+          "state_after",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "userID": "${fixture:users:qa_seed_user_01:_id}",
+            "flightID": "${fixture:flights:QA201-2:_id}",
+            "flightClass": "economy",
+            "passengerCount": 1,
+            "passengerIDs": [
+              "${fixture:passengers:qa-passenger-01@example.test:_id}"
+            ]
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          201
+        ],
+        "assertions": [
+          {
+            "kind": "price_equals_count_times_fare"
+          },
+          {
+            "kind": "seat_delta",
+            "amount": -1
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "business_rule",
+        "evidence": [
+          "QAirline/backend/controllers/BookingController.js:35-61"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

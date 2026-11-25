@@ -1,0 +1,75 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "createContent",
+    "method": "POST",
+    "path": "/api/content",
+    "scope": "extension"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1content/post",
+    "route": "QAirline/backend/routes/ContentRoute.js",
+    "controller": "QAirline/backend/controllers/ContentController.js"
+  },
+  "obligations": [
+    {
+      "id": "createContent.valid",
+      "operation_id": "createContent",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Tạo nội dung",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "title": "Benchmark Content",
+            "description": "Benchmark description",
+            "image": "${fixture:files:benchmark_image:filename}",
+            "contentType": "News"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          201
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1content/post/responses/201"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1content/post/responses/201",
+          "QAirline/backend/controllers/ContentController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "needs_fixture"
+    }
+  ]
+}

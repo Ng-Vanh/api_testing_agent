@@ -1,0 +1,198 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "deleteBooking",
+    "method": "DELETE",
+    "path": "/api/bookings/{id}",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings~1{id}/delete",
+    "route": "QAirline/backend/routes/BookingRoute.js",
+    "controller": "QAirline/backend/controllers/BookingController.js"
+  },
+  "obligations": [
+    {
+      "id": "deleteBooking.valid",
+      "operation_id": "deleteBooking",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Hủy booking",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "id": "${fixture:bookings:qa_seed_user_01|QA101-2|economy:_id}"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings~1{id}/delete/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings~1{id}/delete/responses/200",
+          "QAirline/backend/controllers/BookingController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "deleteBooking.unknown_id",
+      "operation_id": "deleteBooking",
+      "category": "invalid",
+      "subcategory": "unknown_resource",
+      "intent": "ID đúng định dạng nhưng không tồn tại",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "resource_absent",
+            "location": "path",
+            "field": "id",
+            "format": "objectid"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "id": "000000000000000000000000"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          404
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings~1{id}/delete/responses/404"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1bookings~1{id}/delete",
+          "QAirline/backend/controllers/BookingController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "deleteBooking.restore_seats",
+      "operation_id": "deleteBooking",
+      "category": "stateful",
+      "subcategory": "state_transition",
+      "intent": "Hủy booking hoàn lại số ghế cho chuyến bay",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "existing_booking"
+          },
+          {
+            "kind": "state_snapshot",
+            "resources": [
+              "flight.seatsAvailable",
+              "bookings"
+            ]
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "state_before",
+          "state_after",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "id": "${fixture:bookings:qa_seed_user_01|QA101-2|economy:_id}"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "seat_delta",
+            "amount": "${fixture:bookings:qa_seed_user_01|QA101-2|economy:passengerCount}"
+          },
+          {
+            "kind": "booking_absent"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "business_rule",
+        "evidence": [
+          "QAirline/backend/controllers/BookingController.js:294-321"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

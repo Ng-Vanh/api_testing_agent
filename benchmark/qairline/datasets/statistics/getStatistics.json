@@ -1,0 +1,126 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "getStatistics",
+    "method": "GET",
+    "path": "/api/statistics",
+    "scope": "extension"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1statistics/get",
+    "route": "QAirline/backend/routes/StatisticsRoute.js",
+    "controller": "QAirline/backend/controllers/StatisticsController.js"
+  },
+  "obligations": [
+    {
+      "id": "getStatistics.valid",
+      "operation_id": "getStatistics",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Thống kê booking, doanh thu và người dùng",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {}
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1statistics/get/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1statistics/get/responses/200",
+          "QAirline/backend/controllers/StatisticsController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "getStatistics.counts_match_database",
+      "operation_id": "getStatistics",
+      "category": "stateful",
+      "subcategory": "aggregate_consistency",
+      "intent": "Số liệu thống kê khớp dữ liệu trong DB tại thời điểm đọc",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "statistics_request"
+          },
+          {
+            "kind": "state_snapshot",
+            "resources": [
+              "bookings",
+              "users"
+            ]
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "state_before",
+          "state_after",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {}
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "statistics_match_database"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "business_rule",
+        "evidence": [
+          "QAirline/backend/controllers/StatisticsController.js:1-26"
+        ],
+        "review": "draft"
+      },
+      "readiness": "needs_rule_review"
+    }
+  ]
+}

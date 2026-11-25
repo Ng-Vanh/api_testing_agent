@@ -1,0 +1,68 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "listPassengers",
+    "method": "GET",
+    "path": "/api/passengers",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1passengers/get",
+    "route": "QAirline/backend/routes/PassengerRoute.js",
+    "controller": "QAirline/backend/controllers/PassengerController.js"
+  },
+  "obligations": [
+    {
+      "id": "listPassengers.valid",
+      "operation_id": "listPassengers",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Danh sách hành khách",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {}
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1passengers/get/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1passengers/get/responses/200",
+          "QAirline/backend/controllers/PassengerController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

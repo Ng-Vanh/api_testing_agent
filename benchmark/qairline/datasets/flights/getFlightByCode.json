@@ -1,0 +1,128 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "getFlightByCode",
+    "method": "GET",
+    "path": "/api/flights/code/{code}",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1code~1{code}/get",
+    "route": "QAirline/backend/routes/FlightRoute.js",
+    "controller": "QAirline/backend/controllers/FlightController.js"
+  },
+  "contract_gap": "Flight response populate Airport/Aircraft nhưng OpenAPI mô tả ObjectId.",
+  "obligations": [
+    {
+      "id": "getFlightByCode.valid",
+      "operation_id": "getFlightByCode",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Tra chuyến bay theo mã",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "code": "QA101-2"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": []
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1code~1{code}/get/responses/200",
+          "QAirline/backend/controllers/FlightController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "needs_rule_review"
+    },
+    {
+      "id": "getFlightByCode.unknown_code",
+      "operation_id": "getFlightByCode",
+      "category": "invalid",
+      "subcategory": "unknown_resource",
+      "intent": "Mã chuyến bay không tồn tại",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "resource_absent",
+            "location": "path",
+            "field": "code",
+            "format": "string"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "code": "QA-NOT-FOUND"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          404
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1code~1{code}/get/responses/404"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1code~1{code}/get",
+          "QAirline/backend/controllers/FlightController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

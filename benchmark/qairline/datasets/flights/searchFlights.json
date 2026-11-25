@@ -1,0 +1,255 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "searchFlights",
+    "method": "POST",
+    "path": "/api/flights/search",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1search/post",
+    "route": "QAirline/backend/routes/FlightRoute.js",
+    "controller": "QAirline/backend/controllers/FlightController.js"
+  },
+  "obligations": [
+    {
+      "id": "searchFlights.valid",
+      "operation_id": "searchFlights",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Tìm chuyến bay theo thành phố/ngày/số khách",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "departureCity": "Ho Chi Minh City",
+            "destinationCity": "Ha Noi",
+            "departureDate": "${fixture:flights:QA101-2:departureDate}",
+            "passengerCount": 1
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1search/post/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1search/post/responses/200",
+          "QAirline/backend/controllers/FlightController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "searchFlights.missing_departureCity",
+      "operation_id": "searchFlights",
+      "category": "invalid",
+      "subcategory": "missing_required",
+      "intent": "Thiếu trường bắt buộc departureCity",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "field_absent",
+            "location": "body",
+            "field": "departureCity"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "destinationCity": "Ha Noi",
+            "departureDate": "${fixture:flights:QA101-2:departureDate}",
+            "passengerCount": 1
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1search/post/responses/400"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1search/post",
+          "QAirline/backend/controllers/FlightController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "searchFlights.zero_passenger_count",
+      "operation_id": "searchFlights",
+      "category": "boundary",
+      "subcategory": "boundary_value",
+      "intent": "Số hành khách bằng 0",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "field_equals",
+            "location": "body",
+            "field": "passengerCount",
+            "value": 0
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "departureCity": "Ho Chi Minh City",
+            "destinationCity": "Ha Noi",
+            "departureDate": "${fixture:flights:QA101-2:departureDate}",
+            "passengerCount": 0
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1search/post/responses/400"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights~1search/post",
+          "QAirline/backend/controllers/FlightController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "searchFlights.result_matches_search",
+      "operation_id": "searchFlights",
+      "category": "stateful",
+      "subcategory": "filter_correctness",
+      "intent": "Mọi flight trả về khớp thành phố, ngày và đủ ghế",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "search_parameters_and_seeded_results"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "departureCity": "Ho Chi Minh City",
+            "destinationCity": "Ha Noi",
+            "departureDate": "${fixture:flights:QA101-2:departureDate}",
+            "passengerCount": 1
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "search_results_match_request"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "business_rule",
+        "evidence": [
+          "QAirline/backend/controllers/FlightController.js:24-104"
+        ],
+        "review": "draft"
+      },
+      "readiness": "needs_rule_review"
+    }
+  ]
+}

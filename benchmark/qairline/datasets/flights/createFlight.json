@@ -1,0 +1,238 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "createFlight",
+    "method": "POST",
+    "path": "/api/flights",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights/post",
+    "route": "QAirline/backend/routes/FlightRoute.js",
+    "controller": "QAirline/backend/controllers/FlightController.js"
+  },
+  "obligations": [
+    {
+      "id": "createFlight.valid",
+      "operation_id": "createFlight",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Tạo chuyến bay",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "flightCode": "QA-BENCH-001",
+            "departureAirport": "${fixture:airports:SGN:_id}",
+            "arrivalAirport": "${fixture:airports:HAN:_id}",
+            "departureTime": "${clock:future_day_10T01_00Z}",
+            "arrivalTime": "${clock:future_day_10T03_00Z}",
+            "flightClass": {
+              "economy": {
+                "price": 1200000,
+                "seatsAvailable": 50
+              },
+              "business": {
+                "price": 2800000,
+                "seatsAvailable": 10
+              }
+            },
+            "aircraft": "${fixture:aircraft:QA-SEED-01:_id}",
+            "flightStatus": "Scheduled"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          201
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights/post/responses/201"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights/post/responses/201",
+          "QAirline/backend/controllers/FlightController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "createFlight.missing_flightCode",
+      "operation_id": "createFlight",
+      "category": "invalid",
+      "subcategory": "missing_required",
+      "intent": "Thiếu trường bắt buộc flightCode",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "field_absent",
+            "location": "body",
+            "field": "flightCode"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "departureAirport": "${fixture:airports:SGN:_id}",
+            "arrivalAirport": "${fixture:airports:HAN:_id}",
+            "departureTime": "${clock:future_day_10T01_00Z}",
+            "arrivalTime": "${clock:future_day_10T03_00Z}",
+            "flightClass": {
+              "economy": {
+                "price": 1200000,
+                "seatsAvailable": 50
+              },
+              "business": {
+                "price": 2800000,
+                "seatsAvailable": 10
+              }
+            },
+            "aircraft": "${fixture:aircraft:QA-SEED-01:_id}",
+            "flightStatus": "Scheduled"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights/post/responses/400"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights/post",
+          "QAirline/backend/controllers/FlightController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "createFlight.arrival_before_departure",
+      "operation_id": "createFlight",
+      "category": "boundary",
+      "subcategory": "boundary_value",
+      "intent": "Giờ đến không sau giờ đi",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "field_relation",
+            "left": "body.arrivalTime",
+            "operator": "<=",
+            "right": "body.departureTime"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "flightCode": "QA-BENCH-001",
+            "departureAirport": "${fixture:airports:SGN:_id}",
+            "arrivalAirport": "${fixture:airports:HAN:_id}",
+            "departureTime": "${clock:future_day_10T01_00Z}",
+            "arrivalTime": "${clock:future_day_10T01_00Z}",
+            "flightClass": {
+              "economy": {
+                "price": 1200000,
+                "seatsAvailable": 50
+              },
+              "business": {
+                "price": 2800000,
+                "seatsAvailable": 10
+              }
+            },
+            "aircraft": "${fixture:aircraft:QA-SEED-01:_id}",
+            "flightStatus": "Scheduled"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights/post/responses/400"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1flights/post",
+          "QAirline/backend/controllers/FlightController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "getSchedulerStatus",
+    "method": "GET",
+    "path": "/scheduler/status",
+    "scope": "extension"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1scheduler~1status/get",
+    "route": "QAirline/backend/routes/SchedulerRoute.js",
+    "controller": "QAirline/backend/controllers/SchedulerController.js"
+  },
+  "obligations": [
+    {
+      "id": "getSchedulerStatus.valid",
+      "operation_id": "getSchedulerStatus",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Trạng thái scheduler",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {}
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1scheduler~1status/get/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1scheduler~1status/get/responses/200",
+          "QAirline/backend/controllers/SchedulerController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

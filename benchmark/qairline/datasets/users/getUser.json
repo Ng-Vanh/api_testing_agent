@@ -1,0 +1,186 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "getUser",
+    "method": "GET",
+    "path": "/api/users/{id}",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1{id}/get",
+    "route": "QAirline/backend/routes/UserRoute.js",
+    "controller": "QAirline/backend/controllers/UserController.js"
+  },
+  "obligations": [
+    {
+      "id": "getUser.valid",
+      "operation_id": "getUser",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Lấy người dùng theo ID",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "id": "${fixture:users:qa_seed_user_01:_id}"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1{id}/get/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1{id}/get/responses/200",
+          "QAirline/backend/controllers/UserController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "getUser.unknown_id",
+      "operation_id": "getUser",
+      "category": "invalid",
+      "subcategory": "unknown_resource",
+      "intent": "ID đúng định dạng nhưng không tồn tại",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "resource_absent",
+            "location": "path",
+            "field": "id",
+            "format": "objectid"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "id": "000000000000000000000000"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          404
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1{id}/get/responses/404"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1{id}/get",
+          "QAirline/backend/controllers/UserController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "getUser.no_password_hash",
+      "operation_id": "getUser",
+      "category": "security",
+      "subcategory": "sensitive_data_exposure",
+      "intent": "Response người dùng không lộ password hash",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "existing_user"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "id": "${fixture:users:qa_seed_user_01:_id}"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_field_absent",
+            "path": "$.password"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "security_rule",
+        "evidence": [
+          "docs/research/01-qairline-survey.md:73"
+        ],
+        "review": "draft"
+      },
+      "readiness": "needs_rule_review"
+    }
+  ]
+}

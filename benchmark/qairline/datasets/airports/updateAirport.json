@@ -1,0 +1,193 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "updateAirport",
+    "method": "PUT",
+    "path": "/api/airports/{id}",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1airports~1{id}/put",
+    "route": "QAirline/backend/routes/AirportRoute.js",
+    "controller": "QAirline/backend/controllers/AirportController.js"
+  },
+  "obligations": [
+    {
+      "id": "updateAirport.valid",
+      "operation_id": "updateAirport",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Cập nhật sân bay",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "id": "${fixture:airports:SGN:_id}"
+          },
+          "body": {
+            "city": "Ho Chi Minh City - Benchmark"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1airports~1{id}/put/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1airports~1{id}/put/responses/200",
+          "QAirline/backend/controllers/AirportController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "updateAirport.unknown_id",
+      "operation_id": "updateAirport",
+      "category": "invalid",
+      "subcategory": "unknown_resource",
+      "intent": "ID đúng định dạng nhưng không tồn tại",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "resource_absent",
+            "location": "path",
+            "field": "id",
+            "format": "objectid"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "id": "000000000000000000000000"
+          },
+          "body": {
+            "city": "Ho Chi Minh City - Benchmark"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          404
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1airports~1{id}/put/responses/404"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1airports~1{id}/put",
+          "QAirline/backend/controllers/AirportController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "updateAirport.empty_update",
+      "operation_id": "updateAirport",
+      "category": "invalid",
+      "subcategory": "empty_update",
+      "intent": "Body không chứa trường cập nhật",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "empty_body"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "id": "${fixture:airports:SGN:_id}"
+          },
+          "body": {}
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1airports~1{id}/put/responses/400"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1airports~1{id}/put",
+          "QAirline/backend/controllers/AirportController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

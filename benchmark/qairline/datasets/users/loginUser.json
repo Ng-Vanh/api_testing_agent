@@ -1,0 +1,189 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "loginUser",
+    "method": "POST",
+    "path": "/api/users/login",
+    "scope": "core"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1login/post",
+    "route": "QAirline/backend/routes/UserRoute.js",
+    "controller": "QAirline/backend/controllers/UserController.js"
+  },
+  "obligations": [
+    {
+      "id": "loginUser.valid",
+      "operation_id": "loginUser",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Đăng nhập",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "username": "qa_seed_user_01",
+            "password": "${secret:seed_password}"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1login/post/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1login/post/responses/200",
+          "QAirline/backend/controllers/UserController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "loginUser.missing_username",
+      "operation_id": "loginUser",
+      "category": "invalid",
+      "subcategory": "missing_required",
+      "intent": "Thiếu trường bắt buộc username",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "field_absent",
+            "location": "body",
+            "field": "username"
+          },
+          {
+            "kind": "otherwise_valid"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "password": "${secret:seed_password}"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          400
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1login/post/responses/400"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1login/post",
+          "QAirline/backend/controllers/UserController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    },
+    {
+      "id": "loginUser.wrong_password",
+      "operation_id": "loginUser",
+      "category": "invalid",
+      "subcategory": "invalid_credentials",
+      "intent": "Mật khẩu sai phải bị từ chối",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "invalid_credentials",
+            "username_exists": true,
+            "password_matches": false
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "body": {
+            "username": "qa_seed_user_01",
+            "password": "wrong-password"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          401
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1login/post/responses/401"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1users~1login/post",
+          "QAirline/backend/controllers/UserController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "ready"
+    }
+  ]
+}

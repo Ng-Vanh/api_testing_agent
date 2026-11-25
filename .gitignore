@@ -19,10 +19,17 @@ wheels/
 venv/
 ENV/
 env/
+.conda/
+.tox/
+.nox/
+.ipynb_checkpoints/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
+.coverage.*
+coverage/
+coverage.xml
 htmlcov/
 
 # === Node.js (QAirline) ===
@@ -34,14 +41,23 @@ pnpm-debug.log*
 
 # === Environment & API Keys ===
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+!.env.*.example
 *.pem
 *.key
 
 # === Docker & Local MongoDB ===
 mongo_data/
 data/db/
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+*.sqlite3-wal
+*.sqlite3-shm
+*.sqlite3-journal
 
 # === Experiment Logs & Temporary Outputs ===
 *.log

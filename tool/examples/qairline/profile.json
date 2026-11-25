@@ -1,0 +1,11 @@
+{
+  "base_url": "http://localhost:5000",
+  "allowed_origins": ["http://localhost:5000"],
+  "allowed_ips": ["127.0.0.1", "::1"],
+  "probe_path": "/api/airports",
+  "timeout_seconds": 5,
+  "required_fixtures": [],
+  "ready_fixtures": [],
+  "auth_required": false,
+  "reset_available": false
+}

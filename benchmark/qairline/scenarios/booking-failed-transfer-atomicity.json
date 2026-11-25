@@ -1,0 +1,68 @@
+{
+  "version": "0.1",
+  "scenario_id": "booking.failed_transfer_keeps_state",
+  "scope": "core",
+  "intent": "Chuyển Booking sang chuyến hết ghế phải bị từ chối mà không đổi booking hoặc số ghế hai chuyến",
+  "fixture": "full_destination_flight",
+  "readiness": "needs_fixture",
+  "steps": [
+    {
+      "id": "old_flight_before",
+      "operation_id": "getFlight",
+      "request": { "path": { "id": "${fixture:flights:QA101-2:_id}" } },
+      "expected": { "status": [200] },
+      "capture": { "old_seats_before": "$.flightClass.economy.seatsAvailable" }
+    },
+    {
+      "id": "destination_before",
+      "operation_id": "getFlight",
+      "request": { "path": { "id": "${fixture:flights:full_destination_flight:_id}" } },
+      "expected": { "status": [200] },
+      "capture": { "destination_seats_before": "$.flightClass.economy.seatsAvailable" }
+    },
+    {
+      "id": "booking_before",
+      "operation_id": "getBooking",
+      "request": { "path": { "id": "${fixture:bookings:qa_seed_user_01|QA101-2|economy:_id}" } },
+      "expected": { "status": [200] },
+      "capture": { "booking_flight_before": "$.flightID._id" }
+    },
+    {
+      "id": "attempt_transfer",
+      "operation_id": "updateBooking",
+      "request": { "path": { "id": "${fixture:bookings:qa_seed_user_01|QA101-2|economy:_id}" }, "body": { "flightID": "${fixture:flights:full_destination_flight:_id}" } },
+      "expected": { "status": [400] }
+    },
+    {
+      "id": "old_flight_after",
+      "operation_id": "getFlight",
+      "request": { "path": { "id": "${fixture:flights:QA101-2:_id}" } },
+      "expected": { "status": [200] },
+      "capture": { "old_seats_after": "$.flightClass.economy.seatsAvailable" }
+    },
+    {
+      "id": "destination_after",
+      "operation_id": "getFlight",
+      "request": { "path": { "id": "${fixture:flights:full_destination_flight:_id}" } },
+      "expected": { "status": [200] },
+      "capture": { "destination_seats_after": "$.flightClass.economy.seatsAvailable" }
+    },
+    {
+      "id": "booking_after",
+      "operation_id": "getBooking",
+      "request": { "path": { "id": "${fixture:bookings:qa_seed_user_01|QA101-2|economy:_id}" } },
+      "expected": { "status": [200] },
+      "capture": { "booking_flight_after": "$.flightID._id" }
+    }
+  ],
+  "assertions": [
+    { "kind": "equals", "left": "${memory:old_seats_after}", "right": "${memory:old_seats_before}" },
+    { "kind": "equals", "left": "${memory:destination_seats_after}", "right": "${memory:destination_seats_before}" },
+    { "kind": "equals", "left": "${memory:booking_flight_after}", "right": "${memory:booking_flight_before}" }
+  ],
+  "oracle": {
+    "basis": "business_rule",
+    "evidence": ["QAirline/backend/controllers/BookingController.js:216-250", "docs/research/01-qairline-survey.md:73"],
+    "review": "draft"
+  }
+}

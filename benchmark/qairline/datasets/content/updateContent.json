@@ -1,0 +1,75 @@
+{
+  "version": "0.2",
+  "benchmark": "QAirline",
+  "operation": {
+    "operationId": "updateContent",
+    "method": "PUT",
+    "path": "/api/content/{id}",
+    "scope": "extension"
+  },
+  "sources": {
+    "openapi": "QAirline/specs/qairline_openapi.json#/paths/~1api~1content~1{id}/put",
+    "route": "QAirline/backend/routes/ContentRoute.js",
+    "controller": "QAirline/backend/controllers/ContentController.js"
+  },
+  "obligations": [
+    {
+      "id": "updateContent.valid",
+      "operation_id": "updateContent",
+      "category": "valid",
+      "subcategory": "happy_path",
+      "intent": "Cập nhật nội dung",
+      "coverage_target": {
+        "match": "semantic",
+        "preconditions": [
+          {
+            "kind": "fixture_state",
+            "name": "seeded"
+          }
+        ],
+        "request_predicates": [
+          {
+            "kind": "valid_request",
+            "scope": "operation_schema_and_references"
+          }
+        ],
+        "evidence_required": [
+          "request",
+          "response",
+          "oracle_result"
+        ]
+      },
+      "input": {
+        "fixture": "seeded",
+        "request": {
+          "path": {
+            "id": "${fixture:content:benchmark_content:_id}"
+          },
+          "body": {
+            "title": "Updated Benchmark Content"
+          }
+        }
+      },
+      "expected": {
+        "status": [
+          200
+        ],
+        "assertions": [
+          {
+            "kind": "response_matches_openapi",
+            "ref": "QAirline/specs/qairline_openapi.json#/paths/~1api~1content~1{id}/put/responses/200"
+          }
+        ]
+      },
+      "oracle": {
+        "basis": "contract",
+        "evidence": [
+          "QAirline/specs/qairline_openapi.json#/paths/~1api~1content~1{id}/put/responses/200",
+          "QAirline/backend/controllers/ContentController.js"
+        ],
+        "review": "draft"
+      },
+      "readiness": "needs_fixture"
+    }
+  ]
+}
