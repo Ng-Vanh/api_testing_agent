@@ -118,7 +118,7 @@ python -m ruff check app tests
 python -m pip check
 ```
 
-Tại `tool/frontend`: `npm run build`. Workflow [tool-m0.yml](../.github/workflows/tool-m0.yml) kiểm cài mới, backend M0/M1 và build UI trên Linux/Windows; chưa thể coi Windows đã đạt trước khi workflow chạy xanh.
+Tại `tool/frontend`: `npm run build`. Chạy các lệnh kiểm tra trên Linux và Windows khi xác minh cài mới. Hiện đã kiểm chứng Linux local; Windows vẫn chờ kiểm tra trực tiếp.
 
 Tài liệu thư viện được đối chiếu: [FastAPI testing](https://fastapi.tiangolo.com/tutorial/testing/), [Pydantic models](https://docs.pydantic.dev/latest/concepts/models/), [LangGraph checkpoint](https://docs.langchain.com/oss/python/langgraph/checkpointers).
 

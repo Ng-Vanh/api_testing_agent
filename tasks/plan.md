@@ -1,6 +1,6 @@
 # Kế hoạch triển khai chi tiết API Testing Tool
 
-Trạng thái: **M0 có mã nguồn/kiểm chứng local Linux và cấu hình cổng 8111; M1 đã hoàn thành CLI từ spec tới báo cáo**. T01 còn xác minh cài mới trên Windows qua CI. Xem [bằng chứng M0](evidence/m0.md) và [M1](evidence/m1.md). Tài liệu này chia [thiết kế và phạm vi sản phẩm](../docs/research/04-api-testing-method-and-build-plan.md) thành các bước code có thể kiểm tra. Cập nhật tiến độ tại [todo.md](todo.md); chỉ đánh dấu xong khi đạt tiêu chí và lưu bằng chứng. Không sửa hoặc thay thế [`plan.md` nghiên cứu ở gốc repo](../plan.md).
+Trạng thái: **M0 có mã nguồn/kiểm chứng local Linux và cấu hình cổng 8111; M1 đã hoàn thành CLI từ spec tới báo cáo**. T01 còn xác minh cài mới trên Windows trực tiếp. Xem [bằng chứng M0](evidence/m0.md) và [M1](evidence/m1.md). Tài liệu này chia [thiết kế và phạm vi sản phẩm](../docs/research/04-api-testing-method-and-build-plan.md) thành các bước code có thể kiểm tra. Cập nhật tiến độ tại [todo.md](todo.md); chỉ đánh dấu xong khi đạt tiêu chí và lưu bằng chứng. Không sửa hoặc thay thế [`plan.md` nghiên cứu ở gốc repo](../plan.md).
 
 ## 1. Phạm vi và quyết định kỹ thuật
 
@@ -28,7 +28,7 @@ Lệnh bên dưới là **hợp đồng lệnh dự kiến**, được tạo và
 
 **Phụ thuộc:** không. **Phạm vi file:** `tool/backend/.python-version`, `requirements*.txt`/lock, `tool/frontend/package.json`, `.gitignore`, `README.md`, cấu hình khởi động API/worker/UI. Tạo cấu trúc theo tài liệu thiết kế; chốt phiên bản dependency tương thích Python 3.12 trên Linux/Windows, không trộn dependency của QAirline vào tool.
 
-**Hoàn thành khi:** cài từ môi trường sạch, API health và CLI `--help` chạy được, UI build được; secret/DB/artifact không bị commit. **Kiểm tra:** cài theo README trên Linux và Windows hoặc CI hai hệ; chạy `python --version`, API health, CLI help, `npm run build`; ghi phiên bản thực tế.
+**Hoàn thành khi:** cài từ môi trường sạch, API health và CLI `--help` chạy được, UI build được; secret/DB/artifact không bị commit. **Kiểm tra:** cài theo README trên Linux và Windows trực tiếp trên hai hệ; chạy `python --version`, API health, CLI help, `npm run build`; ghi phiên bản thực tế.
 
 #### T02. Định nghĩa contract và verdict
 

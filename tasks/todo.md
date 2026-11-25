@@ -1,23 +1,23 @@
 # Checklist tiến độ API Testing Tool
 
-Nguồn chi tiết và tiêu chí kiểm tra: [plan.md](plan.md). M0 đã có code và kiểm chứng Linux, cổng tool đã đổi sang 8111; T01 còn chờ xác nhận cài mới trên Windows qua CI. M1 đã chạy CLI từ spec tới báo cáo trên QAirline cô lập. Với mỗi Txx, điền `owner`, liên kết PR/commit hoặc file, lệnh kiểm tra và kết quả vào ô **evidence** trước khi đánh dấu `[x]`. Một checkpoint chỉ được đánh dấu khi các bước phụ thuộc và luồng thật tương ứng đã đạt.
+Nguồn chi tiết và tiêu chí kiểm tra: [plan.md](plan.md). M0 đã có code và kiểm chứng Linux, cổng tool đã đổi sang 8111; T01 còn chờ xác nhận cài mới trên Windows trực tiếp. M1 đã chạy CLI từ spec tới báo cáo trên QAirline cô lập. Với mỗi Txx, điền `owner`, liên kết PR/commit hoặc file, lệnh kiểm tra và kết quả vào ô **evidence** trước khi đánh dấu `[x]`. Một checkpoint chỉ được đánh dấu khi các bước phụ thuộc và luồng thật tương ứng đã đạt.
 
 | Trường theo dõi | Giá trị |
 |---|---|
 | Ngày bắt đầu | 2026-11-25 |
 | Phiên bản Python | conda apitesting — Python 3.12.16 |
 | Tổng bước | 28 |
-| Đã hoàn thành | 7/28; T01 đã code/test Linux, chờ Windows CI |
+| Đã hoàn thành | 7/28; T01 đã code/test Linux, chờ kiểm tra Windows |
 | Người điều phối | Chưa gán |
 
 ## M0 — Khung sản phẩm và hợp đồng
 
-- [ ] **T01** Scaffold và dependency — owner: Codex; [evidence](evidence/m0.md); Linux/build/lock đã đạt, còn chờ fresh install Windows CI.
+- [ ] **T01** Scaffold và dependency — owner: Codex; [evidence](evidence/m0.md); Linux/build/lock đã đạt, còn chờ cài mới trên Windows.
 - [x] **T02** Contract, plan, verdict — owner: Codex; [evidence](evidence/m0.md); contract/schema và unit test đã đạt local trên scaffold T01.
 - [x] **T03** SQLite, checkpoint, trace artifact — owner: Codex; [evidence](evidence/m0.md); reopen, bất biến, redaction, crash reconciliation đã đạt.
 - [x] **T04** Profile và preflight an toàn — owner: Codex; [evidence](evidence/m0.md); host/IP/redirect/auth/fixture và HTTP probe local đã đạt.
 - [x] **T05** OpenAPI parser/normalizer — owner: Codex; [evidence](evidence/m0.md); JSON/YAML/ref, override parameter, spec lỗi và 48 operation đã đạt.
-- [ ] **Checkpoint M0:** contract/parser/storage/preflight đạt local; còn chờ T01 Windows CI. [Evidence](evidence/m0.md).
+- [ ] **Checkpoint M0:** contract/parser/storage/preflight đạt local; còn chờ T01 kiểm tra Windows. [Evidence](evidence/m0.md).
 
 ## M1 — CLI từ spec đến báo cáo
 
@@ -62,5 +62,5 @@ Nguồn chi tiết và tiêu chí kiểm tra: [plan.md](plan.md). M0 đã có co
 
 | Ngày | Bước | Người kiểm tra | Lệnh/đường dẫn bằng chứng | Kết quả hoặc việc còn lại |
 |---|---|---|---|---|
-| 2026-11-25 | T01–T05 | Codex | [Bằng chứng M0](evidence/m0.md) | 17 test đạt; UI build và HTTP smoke đạt; Windows CI chưa chạy. |
+| 2026-11-25 | T01–T05 | Codex | [Bằng chứng M0](evidence/m0.md) | 17 test đạt; UI build và HTTP smoke đạt; Windows chưa được kiểm tra. |
 | 2026-11-25 | T06–T08, cổng 8111 | Codex | [Bằng chứng M1](evidence/m1.md) | CLI end-to-end và QAirline cô lập đạt PASS; API 8111/proxy 5173 đạt; T01 Windows vẫn mở. |

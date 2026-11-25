@@ -183,7 +183,7 @@ Agent chỉ nhận OpenAPI và cấu hình chạy. [Benchmark QAirline](../../be
 | Bộ seed có importer và dữ liệu mẫu | Lệnh reset DB cô lập trước từng run; kiểm soát scheduler và ngày bay |
 | Benchmark 48 dataset + hai scenario, kiểm tra cấu trúc catalog | Duyệt oracle `draft`, tạo fixture còn thiếu và runner chấm `coverage_target` |
 | Tài liệu thiết kế phương pháp/paper; M0/M1 có CLI `spec/preflight/run/show`, LangGraph một ca GET, executor, contract validator, SQLite/JSONL và report | Scenario/data generation đầy đủ, coverage/planner thích nghi, web API/UI quản lý run, benchmark evaluator và baseline |
-| Backend tool dùng cổng 8111; UI scaffold và proxy đã kiểm local; 31 test M0/M1 đạt | Xác minh fresh install Windows CI của T01; xem [bằng chứng M1](../../tasks/evidence/m1.md) |
+| Backend tool dùng cổng 8111; UI scaffold và proxy đã kiểm local; 31 test M0/M1 đạt | Xác minh cài mới trên Windows của T01; xem [bằng chứng M1](../../tasks/evidence/m1.md) |
 
 Vì `import-seed.sh` chỉ thêm bản ghi thiếu, **không dùng nó như lệnh reset**. Việc duyệt oracle phải phân biệt hành vi backend hiện tại với yêu cầu mong muốn; một ca làm backend fail vẫn có thể có oracle đúng.
 
