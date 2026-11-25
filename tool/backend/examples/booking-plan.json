@@ -1,0 +1,62 @@
+{
+  "contract_version": "1",
+  "case_id": "booking.cancel_restores_seats",
+  "steps": [
+    {
+      "contract_version": "1",
+      "step_id": "read_before",
+      "role": "setup",
+      "operation_id": "getFlight",
+      "depends_on": [],
+      "bindings": {},
+      "capture": {
+        "seats_before": "/flight/seatsAvailable"
+      },
+      "request_template": {},
+      "assertions": []
+    },
+    {
+      "contract_version": "1",
+      "step_id": "create",
+      "role": "setup",
+      "operation_id": "createBooking",
+      "depends_on": [
+        "read_before"
+      ],
+      "bindings": {},
+      "capture": {
+        "booking_id": "/booking/_id"
+      },
+      "request_template": {},
+      "assertions": []
+    },
+    {
+      "contract_version": "1",
+      "step_id": "cancel",
+      "role": "action",
+      "operation_id": "deleteBooking",
+      "depends_on": [
+        "create"
+      ],
+      "bindings": {
+        "path.id": "create.booking_id"
+      },
+      "capture": {},
+      "request_template": {},
+      "assertions": []
+    },
+    {
+      "contract_version": "1",
+      "step_id": "read_after",
+      "role": "observation",
+      "operation_id": "getFlight",
+      "depends_on": [
+        "cancel"
+      ],
+      "bindings": {},
+      "capture": {},
+      "request_template": {},
+      "assertions": []
+    }
+  ]
+}

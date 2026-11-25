@@ -1,0 +1,3 @@
+-r requirements.lock
+langchain>=1,<2
+# Add and lock the selected model provider at T25.

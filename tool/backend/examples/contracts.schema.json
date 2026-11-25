@@ -1,0 +1,1394 @@
+{
+  "AbstractTestCase": {
+    "$defs": {
+      "Oracle": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "basis": {
+            "enum": [
+              "contract",
+              "business_rule",
+              "llm",
+              "observed"
+            ],
+            "title": "Basis",
+            "type": "string"
+          },
+          "source": {
+            "minLength": 1,
+            "title": "Source",
+            "type": "string"
+          },
+          "approved": {
+            "default": false,
+            "title": "Approved",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "basis",
+          "source"
+        ],
+        "title": "Oracle",
+        "type": "object"
+      },
+      "TestObjective": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "target_id": {
+            "title": "Target Id",
+            "type": "string"
+          },
+          "operation_id": {
+            "title": "Operation Id",
+            "type": "string"
+          },
+          "intent": {
+            "enum": [
+              "valid",
+              "invalid",
+              "boundary",
+              "stateful"
+            ],
+            "title": "Intent",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          }
+        },
+        "required": [
+          "target_id",
+          "operation_id",
+          "intent",
+          "description"
+        ],
+        "title": "TestObjective",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "case_id": {
+        "title": "Case Id",
+        "type": "string"
+      },
+      "objective": {
+        "$ref": "#/$defs/TestObjective"
+      },
+      "preconditions": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Preconditions",
+        "type": "array"
+      },
+      "oracle": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/Oracle"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "case_id",
+      "objective"
+    ],
+    "title": "AbstractTestCase",
+    "type": "object"
+  },
+  "ConcreteRequest": {
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "method": {
+        "enum": [
+          "GET",
+          "POST",
+          "PUT",
+          "PATCH",
+          "DELETE",
+          "HEAD",
+          "OPTIONS",
+          "TRACE"
+        ],
+        "title": "Method",
+        "type": "string"
+      },
+      "url": {
+        "title": "Url",
+        "type": "string"
+      },
+      "headers": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "title": "Headers",
+        "type": "object"
+      },
+      "query": {
+        "additionalProperties": true,
+        "title": "Query",
+        "type": "object"
+      },
+      "body": {
+        "default": null,
+        "title": "Body"
+      }
+    },
+    "required": [
+      "method",
+      "url"
+    ],
+    "title": "ConcreteRequest",
+    "type": "object"
+  },
+  "CoverageSnapshot": {
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "generated": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Generated",
+        "type": "array"
+      },
+      "executed": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Executed",
+        "type": "array"
+      },
+      "verified": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Verified",
+        "type": "array"
+      },
+      "total_targets": {
+        "minimum": 0,
+        "title": "Total Targets",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "total_targets"
+    ],
+    "title": "CoverageSnapshot",
+    "type": "object"
+  },
+  "EndpointSpec": {
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "operation_id": {
+        "title": "Operation Id",
+        "type": "string"
+      },
+      "method": {
+        "title": "Method",
+        "type": "string"
+      },
+      "path": {
+        "title": "Path",
+        "type": "string"
+      },
+      "tags": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Tags",
+        "type": "array"
+      },
+      "parameters": {
+        "items": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "title": "Parameters",
+        "type": "array"
+      },
+      "request_body": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Request Body"
+      },
+      "responses": {
+        "additionalProperties": true,
+        "title": "Responses",
+        "type": "object"
+      },
+      "security": {
+        "items": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "title": "Security",
+        "type": "array"
+      },
+      "provenance": {
+        "title": "Provenance",
+        "type": "string"
+      },
+      "contract_gaps": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Contract Gaps",
+        "type": "array"
+      },
+      "openapi_version": {
+        "default": "3.0.0",
+        "title": "Openapi Version",
+        "type": "string"
+      },
+      "components": {
+        "additionalProperties": true,
+        "title": "Components",
+        "type": "object"
+      }
+    },
+    "required": [
+      "operation_id",
+      "method",
+      "path",
+      "responses",
+      "provenance"
+    ],
+    "title": "EndpointSpec",
+    "type": "object"
+  },
+  "ExecutionPlan": {
+    "$defs": {
+      "AssertionSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "assertion_id": {
+            "title": "Assertion Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "status",
+              "schema",
+              "state",
+              "business_rule"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "expected": {
+            "default": null,
+            "title": "Expected"
+          },
+          "oracle": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Oracle"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "title": "Parameters",
+            "type": "object"
+          }
+        },
+        "required": [
+          "assertion_id",
+          "kind"
+        ],
+        "title": "AssertionSpec",
+        "type": "object"
+      },
+      "Oracle": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "basis": {
+            "enum": [
+              "contract",
+              "business_rule",
+              "llm",
+              "observed"
+            ],
+            "title": "Basis",
+            "type": "string"
+          },
+          "source": {
+            "minLength": 1,
+            "title": "Source",
+            "type": "string"
+          },
+          "approved": {
+            "default": false,
+            "title": "Approved",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "basis",
+          "source"
+        ],
+        "title": "Oracle",
+        "type": "object"
+      },
+      "PlanStep": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "step_id": {
+            "title": "Step Id",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "setup",
+              "action",
+              "observation",
+              "cleanup"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "operation_id": {
+            "title": "Operation Id",
+            "type": "string"
+          },
+          "depends_on": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Depends On",
+            "type": "array"
+          },
+          "bindings": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Bindings",
+            "type": "object"
+          },
+          "capture": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Capture",
+            "type": "object"
+          },
+          "request_template": {
+            "additionalProperties": true,
+            "title": "Request Template",
+            "type": "object"
+          },
+          "assertions": {
+            "items": {
+              "$ref": "#/$defs/AssertionSpec"
+            },
+            "title": "Assertions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "step_id",
+          "role",
+          "operation_id"
+        ],
+        "title": "PlanStep",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "case_id": {
+        "title": "Case Id",
+        "type": "string"
+      },
+      "steps": {
+        "items": {
+          "$ref": "#/$defs/PlanStep"
+        },
+        "minItems": 1,
+        "title": "Steps",
+        "type": "array"
+      }
+    },
+    "required": [
+      "case_id",
+      "steps"
+    ],
+    "title": "ExecutionPlan",
+    "type": "object"
+  },
+  "ExecutionTrace": {
+    "$defs": {
+      "ConcreteRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "method": {
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE",
+              "HEAD",
+              "OPTIONS",
+              "TRACE"
+            ],
+            "title": "Method",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "headers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Headers",
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": true,
+            "title": "Query",
+            "type": "object"
+          },
+          "body": {
+            "default": null,
+            "title": "Body"
+          }
+        },
+        "required": [
+          "method",
+          "url"
+        ],
+        "title": "ConcreteRequest",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "run_id": {
+        "title": "Run Id",
+        "type": "string"
+      },
+      "case_id": {
+        "title": "Case Id",
+        "type": "string"
+      },
+      "step_id": {
+        "title": "Step Id",
+        "type": "string"
+      },
+      "attempt_id": {
+        "title": "Attempt Id",
+        "type": "string"
+      },
+      "request": {
+        "$ref": "#/$defs/ConcreteRequest"
+      },
+      "delivery": {
+        "enum": [
+          "prepared",
+          "response_received",
+          "not_sent",
+          "delivery_unknown"
+        ],
+        "title": "Delivery",
+        "type": "string"
+      },
+      "response": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Response"
+      },
+      "elapsed_ms": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Elapsed Ms"
+      },
+      "error": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Error"
+      }
+    },
+    "required": [
+      "run_id",
+      "case_id",
+      "step_id",
+      "attempt_id",
+      "request",
+      "delivery"
+    ],
+    "title": "ExecutionTrace",
+    "type": "object"
+  },
+  "PlanStep": {
+    "$defs": {
+      "AssertionSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "assertion_id": {
+            "title": "Assertion Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "status",
+              "schema",
+              "state",
+              "business_rule"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "expected": {
+            "default": null,
+            "title": "Expected"
+          },
+          "oracle": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Oracle"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "title": "Parameters",
+            "type": "object"
+          }
+        },
+        "required": [
+          "assertion_id",
+          "kind"
+        ],
+        "title": "AssertionSpec",
+        "type": "object"
+      },
+      "Oracle": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "basis": {
+            "enum": [
+              "contract",
+              "business_rule",
+              "llm",
+              "observed"
+            ],
+            "title": "Basis",
+            "type": "string"
+          },
+          "source": {
+            "minLength": 1,
+            "title": "Source",
+            "type": "string"
+          },
+          "approved": {
+            "default": false,
+            "title": "Approved",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "basis",
+          "source"
+        ],
+        "title": "Oracle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "step_id": {
+        "title": "Step Id",
+        "type": "string"
+      },
+      "role": {
+        "enum": [
+          "setup",
+          "action",
+          "observation",
+          "cleanup"
+        ],
+        "title": "Role",
+        "type": "string"
+      },
+      "operation_id": {
+        "title": "Operation Id",
+        "type": "string"
+      },
+      "depends_on": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Depends On",
+        "type": "array"
+      },
+      "bindings": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "title": "Bindings",
+        "type": "object"
+      },
+      "capture": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "title": "Capture",
+        "type": "object"
+      },
+      "request_template": {
+        "additionalProperties": true,
+        "title": "Request Template",
+        "type": "object"
+      },
+      "assertions": {
+        "items": {
+          "$ref": "#/$defs/AssertionSpec"
+        },
+        "title": "Assertions",
+        "type": "array"
+      }
+    },
+    "required": [
+      "step_id",
+      "role",
+      "operation_id"
+    ],
+    "title": "PlanStep",
+    "type": "object"
+  },
+  "RunManifest": {
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "run_id": {
+        "pattern": "^[a-zA-Z0-9_-]{1,100}$",
+        "title": "Run Id",
+        "type": "string"
+      },
+      "spec_digest": {
+        "title": "Spec Digest",
+        "type": "string"
+      },
+      "base_url": {
+        "title": "Base Url",
+        "type": "string"
+      },
+      "mode": {
+        "default": "schema-only",
+        "enum": [
+          "schema-only",
+          "agent-assisted"
+        ],
+        "title": "Mode",
+        "type": "string"
+      },
+      "seed": {
+        "default": 0,
+        "title": "Seed",
+        "type": "integer"
+      },
+      "status": {
+        "default": "queued",
+        "enum": [
+          "queued",
+          "running",
+          "completed",
+          "failed",
+          "cancelled"
+        ],
+        "title": "Status",
+        "type": "string"
+      },
+      "created_at": {
+        "format": "date-time",
+        "title": "Created At",
+        "type": "string"
+      },
+      "versions": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "title": "Versions",
+        "type": "object"
+      },
+      "config_snapshot": {
+        "additionalProperties": true,
+        "title": "Config Snapshot",
+        "type": "object"
+      }
+    },
+    "required": [
+      "run_id",
+      "spec_digest",
+      "base_url"
+    ],
+    "title": "RunManifest",
+    "type": "object"
+  },
+  "RunReport": {
+    "$defs": {
+      "ConcreteRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "method": {
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE",
+              "HEAD",
+              "OPTIONS",
+              "TRACE"
+            ],
+            "title": "Method",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "headers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Headers",
+            "type": "object"
+          },
+          "query": {
+            "additionalProperties": true,
+            "title": "Query",
+            "type": "object"
+          },
+          "body": {
+            "default": null,
+            "title": "Body"
+          }
+        },
+        "required": [
+          "method",
+          "url"
+        ],
+        "title": "ConcreteRequest",
+        "type": "object"
+      },
+      "ExecutionTrace": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "step_id": {
+            "title": "Step Id",
+            "type": "string"
+          },
+          "attempt_id": {
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "request": {
+            "$ref": "#/$defs/ConcreteRequest"
+          },
+          "delivery": {
+            "enum": [
+              "prepared",
+              "response_received",
+              "not_sent",
+              "delivery_unknown"
+            ],
+            "title": "Delivery",
+            "type": "string"
+          },
+          "response": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Response"
+          },
+          "elapsed_ms": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Elapsed Ms"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error"
+          }
+        },
+        "required": [
+          "run_id",
+          "case_id",
+          "step_id",
+          "attempt_id",
+          "request",
+          "delivery"
+        ],
+        "title": "ExecutionTrace",
+        "type": "object"
+      },
+      "Oracle": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "basis": {
+            "enum": [
+              "contract",
+              "business_rule",
+              "llm",
+              "observed"
+            ],
+            "title": "Basis",
+            "type": "string"
+          },
+          "source": {
+            "minLength": 1,
+            "title": "Source",
+            "type": "string"
+          },
+          "approved": {
+            "default": false,
+            "title": "Approved",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "basis",
+          "source"
+        ],
+        "title": "Oracle",
+        "type": "object"
+      },
+      "RunManifest": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "run_id": {
+            "pattern": "^[a-zA-Z0-9_-]{1,100}$",
+            "title": "Run Id",
+            "type": "string"
+          },
+          "spec_digest": {
+            "title": "Spec Digest",
+            "type": "string"
+          },
+          "base_url": {
+            "title": "Base Url",
+            "type": "string"
+          },
+          "mode": {
+            "default": "schema-only",
+            "enum": [
+              "schema-only",
+              "agent-assisted"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "seed": {
+            "default": 0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "status": {
+            "default": "queued",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "versions": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Versions",
+            "type": "object"
+          },
+          "config_snapshot": {
+            "additionalProperties": true,
+            "title": "Config Snapshot",
+            "type": "object"
+          }
+        },
+        "required": [
+          "run_id",
+          "spec_digest",
+          "base_url"
+        ],
+        "title": "RunManifest",
+        "type": "object"
+      },
+      "ValidationResult": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "assertion_id": {
+            "title": "Assertion Id",
+            "type": "string"
+          },
+          "verdict": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "UNKNOWN",
+              "BLOCKED",
+              "ERROR",
+              "SKIPPED"
+            ],
+            "title": "Verdict",
+            "type": "string"
+          },
+          "expected": {
+            "default": null,
+            "title": "Expected"
+          },
+          "actual": {
+            "default": null,
+            "title": "Actual"
+          },
+          "oracle": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Oracle"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "reason": {
+            "default": "",
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "assertion_id",
+          "verdict"
+        ],
+        "title": "ValidationResult",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "run": {
+        "$ref": "#/$defs/RunManifest"
+      },
+      "verdict": {
+        "enum": [
+          "PASS",
+          "FAIL",
+          "UNKNOWN",
+          "BLOCKED",
+          "ERROR",
+          "SKIPPED"
+        ],
+        "title": "Verdict",
+        "type": "string"
+      },
+      "operation_id": {
+        "title": "Operation Id",
+        "type": "string"
+      },
+      "preflight": {
+        "additionalProperties": true,
+        "title": "Preflight",
+        "type": "object"
+      },
+      "assertions": {
+        "items": {
+          "$ref": "#/$defs/ValidationResult"
+        },
+        "title": "Assertions",
+        "type": "array"
+      },
+      "traces": {
+        "items": {
+          "$ref": "#/$defs/ExecutionTrace"
+        },
+        "title": "Traces",
+        "type": "array"
+      },
+      "reasons": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Reasons",
+        "type": "array"
+      },
+      "duration_seconds": {
+        "minimum": 0,
+        "title": "Duration Seconds",
+        "type": "number"
+      },
+      "report_file": {
+        "title": "Report File",
+        "type": "string"
+      }
+    },
+    "required": [
+      "run",
+      "verdict",
+      "operation_id",
+      "preflight",
+      "duration_seconds",
+      "report_file"
+    ],
+    "title": "RunReport",
+    "type": "object"
+  },
+  "TestObjective": {
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "target_id": {
+        "title": "Target Id",
+        "type": "string"
+      },
+      "operation_id": {
+        "title": "Operation Id",
+        "type": "string"
+      },
+      "intent": {
+        "enum": [
+          "valid",
+          "invalid",
+          "boundary",
+          "stateful"
+        ],
+        "title": "Intent",
+        "type": "string"
+      },
+      "description": {
+        "title": "Description",
+        "type": "string"
+      }
+    },
+    "required": [
+      "target_id",
+      "operation_id",
+      "intent",
+      "description"
+    ],
+    "title": "TestObjective",
+    "type": "object"
+  },
+  "ValidationResult": {
+    "$defs": {
+      "Oracle": {
+        "additionalProperties": false,
+        "properties": {
+          "contract_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Contract Version",
+            "type": "string"
+          },
+          "basis": {
+            "enum": [
+              "contract",
+              "business_rule",
+              "llm",
+              "observed"
+            ],
+            "title": "Basis",
+            "type": "string"
+          },
+          "source": {
+            "minLength": 1,
+            "title": "Source",
+            "type": "string"
+          },
+          "approved": {
+            "default": false,
+            "title": "Approved",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "basis",
+          "source"
+        ],
+        "title": "Oracle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "contract_version": {
+        "const": "1",
+        "default": "1",
+        "title": "Contract Version",
+        "type": "string"
+      },
+      "assertion_id": {
+        "title": "Assertion Id",
+        "type": "string"
+      },
+      "verdict": {
+        "enum": [
+          "PASS",
+          "FAIL",
+          "UNKNOWN",
+          "BLOCKED",
+          "ERROR",
+          "SKIPPED"
+        ],
+        "title": "Verdict",
+        "type": "string"
+      },
+      "expected": {
+        "default": null,
+        "title": "Expected"
+      },
+      "actual": {
+        "default": null,
+        "title": "Actual"
+      },
+      "oracle": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/Oracle"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "reason": {
+        "default": "",
+        "title": "Reason",
+        "type": "string"
+      }
+    },
+    "required": [
+      "assertion_id",
+      "verdict"
+    ],
+    "title": "ValidationResult",
+    "type": "object"
+  }
+}
